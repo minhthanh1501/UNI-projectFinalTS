@@ -1,0 +1,17 @@
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: red;
+    border-color: red;
+}
+
+.ant-input::placeholder {
+    color: gray;
+    font-weight: bold;
+}
+
+.ant-input-affix-wrapper .anticon.ant-input-password-icon {
+    color: white;
+}
+
+.ant-input-affix-wrapper .anticon.ant-input-password-icon:hover {
+    color: white;
+}
