@@ -21,11 +21,11 @@ const defaultTheme: ThemeModal = {
 interface ModalCreateUserProps {
     open: boolean,
     onOk: () => void,
-    onCancle: () => void,
+    onCancel: () => void,
     uid?: string | number
 }
 
-const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancle, uid }) => {
+const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancel, uid }) => {
     const [form] = Form.useForm();
     const queryClient = useQueryClient()
     const [addMode, setAddMode] = useState<boolean>(true)
@@ -37,24 +37,23 @@ const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancle,
     })
 
     const CreateUserMutation = useMutation({
-        mutationFn: (value: DataCreateUser) => apiCreateUser(value)
+        mutationFn: (value: DataCreateUser) => apiCreateUser(value),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] })
+        }
     })
 
     const handleOk = () => {
         form.submit()
-        form.setFieldsValue({ name: "" })
     }
+
 
     const onFinish = (value: DataCreateUser) => {
-        CreateUserMutation.mutate(value, {
-            onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ['users'] })
-            }
-        })
+
+        CreateUserMutation.mutate(value)
+        console.log(CreateUserMutation.status);
         onOk();
     }
-
-
 
     return (
         <div>
@@ -73,7 +72,7 @@ const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancle,
                 }}
 
             >
-                <Modal title="Thêm người dùng" open={open} onOk={handleOk} onCancel={onCancle} style={{ minWidth: "1000px" }} footer={false}>
+                <Modal title="Thêm người dùng" open={open} onOk={handleOk} onCancel={onCancel} style={{ minWidth: "1000px" }} footer={false}>
                     <Form form={form} onFinish={onFinish} name="validateOnly" layout="vertical" autoComplete="off" className="bg-primary border-t-2">
                         <div className="flex gap-5">
                             <Form.Item name="username" label="Tên đăng nhập" rules={[{ required: true }]} className="min-w-[48%]">
@@ -104,7 +103,6 @@ const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancle,
                                 name="unit"
                                 label="Đơn vị"
                                 hasFeedback
-                                rules={[{ required: true, message: 'Please select your country!' }]}
                                 className="min-w-[48%]"
                             >
                                 <Select placeholder="Please select a country">
@@ -116,7 +114,6 @@ const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancle,
                                 name="managerment_agent"
                                 label="Cơ quan quản lý"
                                 hasFeedback
-                                rules={[{ required: true, message: 'Please select your country!' }]}
                                 className="min-w-[48%]"
                             >
                                 <Select placeholder="Please select a country">
@@ -126,14 +123,14 @@ const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancle,
                             </Form.Item>
                         </div>
                         <div className="flex gap-5">
-                            <Form.Item name="phone" label="SĐT" rules={[{ required: true }]} className="min-w-[48%]">
+                            <Form.Item name="phone" label="SĐT" className="min-w-[48%]">
                                 <Input />
                             </Form.Item>
-                            <Form.Item name="position" label="Chức vụ" rules={[{ required: true }]} className="min-w-[48%]">
+                            <Form.Item name="position" label="Chức vụ" className="min-w-[48%]">
                                 <Input />
                             </Form.Item>
                         </div>
-                        <Form.Item name="address" label="Địa chỉ" rules={[{ required: true }]}>
+                        <Form.Item name="address" label="Địa chỉ" >
                             <Input />
                         </Form.Item>
                         <Form.Item>
@@ -142,7 +139,7 @@ const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancle,
                                     display: "flex",
                                     justifyContent: "center"
                                 }}>
-                                <Button type="primary" icon={<SaveOutlined />}>Lưu</Button>
+                                <Button type="primary" htmlType="submit" icon={<SaveOutlined />}>Lưu</Button>
                                 <Button htmlType="reset" icon={<RedoOutlined />}>Làm mới</Button>
                             </Space>
                         </Form.Item>

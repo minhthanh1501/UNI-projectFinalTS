@@ -18,11 +18,12 @@ const createGroup = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     success: response ? true : false,
-    message: response ? "Create Group SuccessFully!" : "Cannot Create Group",
+    message: response ? "Create group success!" : "Something went wrong",
+    groupData: response,
   });
 });
 
-const updateGroup = asyncHandler(async (req, res) => {
+const updateGroupById = asyncHandler(async (req, res) => {
   const gid = req.params;
 
   if (!gid || Object.keys(req.params).length === 0)
@@ -34,11 +35,12 @@ const updateGroup = asyncHandler(async (req, res) => {
 
   return res.status(200).json({
     success: response ? true : false,
-    updatedGroup: response ? response : "Cannot update group!",
+    message: response ? "Update group success!" : "Something went wrong",
+    groupData: response,
   });
 });
 
-const deleteGroup = asyncHandler(async (req, res) => {
+const deleteGroupById = asyncHandler(async (req, res) => {
   const gid = req.params;
 
   const response = await GroupModel.findByIdAndDelete(gid);
@@ -49,17 +51,76 @@ const deleteGroup = asyncHandler(async (req, res) => {
   });
 });
 
-const searchByGroupname = asyncHandler(async (req, res) => {});
+const searchByGroupname = asyncHandler(async (req, res) => {
+  const { name } = req.body;
 
-const getUsersByGroupId = asyncHandler(async (req, res) => {});
+  if (!name) {
+    throw new Error("Missing Input");
+  }
 
-const addUserToGroup = asyncHandler(async (req, res) => {});
+  const searchGroup = GroupModel.find({
+    name: new RegExp(username, "i"),
+  });
+
+  return res.status(200).json({
+    status: searchGroup ? true : false,
+    message: searchGroup ? "Search group success!" : "Something went wrong",
+    groupData: searchGroup,
+  });
+});
+
+const getUsersByGroupId = asyncHandler(async (req, res) => {
+  const { _id } = req.query;
+
+  const users = await GroupModel.findById(_id).populate("users");
+
+  return res.status(200).json({
+    status: users ? true : false,
+    message: users ? "Get Users in Group success!" : "Something went wrong",
+    groupData: users,
+  });
+});
+
+const addUserToGroup = asyncHandler(async (req, res) => {
+  const { userId, groupId } = req.body;
+
+  const response = await GroupModel.findByIdAndUpdate(
+    groupId,
+    { $addToSet: { users: userId } },
+    { new: true }
+  );
+
+  return res.status(200).json({
+    status: response ? true : false,
+    message: response ? "Add Users in Group success!" : "Something went wrong",
+    groupData: response,
+  });
+});
+
+const deleteUserFromGroup = asyncHandler(async (req, res) => {
+  const { userId } = req.body;
+  const { groupId } = req.query;
+
+  const response = await GroupModel.findByIdAndUpdate(
+    groupId,
+    { $pull: { users: userId } },
+    { new: true }
+  );
+
+  return res.status(200).json({
+    status: response ? true : false,
+    message: response ? "Add Users in Group success!" : "Something went wrong",
+    groupData: response,
+  });
+});
 
 module.exports = {
   addUserToGroup,
   createGroup,
-  updateGroup,
-  deleteGroup,
+  updateGroupById,
+  deleteGroupById,
   searchByGroupname,
   getUsersByGroupId,
+  deleteUserFromGroup,
+  addUserToGroup,
 };

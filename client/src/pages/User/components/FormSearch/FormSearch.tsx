@@ -5,7 +5,7 @@ import { ClockCircleOutlined, SearchOutlined } from "@ant-design/icons"
 
 const FormSearch = () => {
 
-    const onFinish = () => {
+    const onSearch = () => {
         console.log("ok")
     }
 
@@ -19,7 +19,7 @@ const FormSearch = () => {
                 }}
             >
                 <Form
-                    onFinish={onFinish}
+                    onFinish={onSearch}
                     name="layout-multiple-horizontal"
                     layout="inline"
                     labelCol={{ span: 4 }}
@@ -75,7 +75,6 @@ const FormSearch = () => {
                             />
                         </Form.Item>
                     </div>
-
                 </Form>
             </ConfigProvider>
         </div>

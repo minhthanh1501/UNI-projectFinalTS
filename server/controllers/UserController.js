@@ -30,6 +30,34 @@ const getUserById = asyncHandler(async (req, res) => {
   });
 });
 
+const updateUserById = asyncHandler(async (req, res) => {
+  const {
+    _id,
+    fullname,
+    email,
+    unit,
+    managerment_agent,
+    phone,
+    position,
+    address,
+  } = req.body;
+  if (!fullname || !email) {
+    throw new Error("Missing Input");
+  }
+
+  const updateUser = await userModel
+    .findByIdAndUpdate(_id, req.body, {
+      new: true,
+    })
+    .select("-password -refreshToken -role");
+
+  return res.status(200).json({
+    success: user ? true : false,
+    message: user ? "Update User Success!" : "Something went wrong",
+    userData: updateUser,
+  });
+});
+
 const deleteUserById = asyncHandler(async (req, res) => {
   const { _id } = req.params;
   if (!_id) {
@@ -40,6 +68,25 @@ const deleteUserById = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: user ? true : false,
     message: user ? "Delete User Success!" : "Something went wrong",
+  });
+});
+
+const searchUserByUsernameOrEmail = asyncHandler(async (req, res) => {
+  const { username, email } = req.body;
+
+  if (!username && !email) {
+    throw new Error("Missing Input");
+  }
+
+  const searchUser = await UserModel.find({
+    username: new RegExp(username, "i"),
+    email: new RegExp(email, "i"),
+  });
+
+  return res.status(200).json({
+    status: searchUser ? true : false,
+    message: searchUser ? "Search user success!" : "Something went wrong",
+    userData: searchUser,
   });
 });
 
@@ -171,4 +218,6 @@ module.exports = {
   getUsers,
   getUserById,
   deleteUserById,
+  updateUserById,
+  searchUserByUsernameOrEmail,
 };

@@ -13,16 +13,15 @@ const ModalDeleteUser: React.FC<ModalDeleteProps> = ({ open, onOk, onCancel, uid
     const queryClient = useQueryClient()
 
     const DeleteUserMutation = useMutation({
-        mutationFn: (id: string | number) => apiDeleteUserById(id)
+        mutationFn: (id: string | number) => apiDeleteUserById(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] })
+        }
+
     })
 
     const handleOk = () => {
-        DeleteUserMutation.mutate(uid, {
-            onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ['users'] })
-            }
-        })
-
+        DeleteUserMutation.mutate(uid)
         onOk();
     }
 
