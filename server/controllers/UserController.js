@@ -31,16 +31,7 @@ const getUserById = asyncHandler(async (req, res) => {
 });
 
 const updateUserById = asyncHandler(async (req, res) => {
-  const {
-    _id,
-    fullname,
-    email,
-    unit,
-    managerment_agent,
-    phone,
-    position,
-    address,
-  } = req.body;
+  const { _id, fullname, email } = req.body;
   if (!fullname || !email) {
     throw new Error("Missing Input");
   }
@@ -52,8 +43,8 @@ const updateUserById = asyncHandler(async (req, res) => {
     .select("-password -refreshToken -role");
 
   return res.status(200).json({
-    success: user ? true : false,
-    message: user ? "Update User Success!" : "Something went wrong",
+    success: updateUser ? true : false,
+    message: updateUser ? "Update User Success!" : "Something went wrong",
     userData: updateUser,
   });
 });
@@ -72,14 +63,10 @@ const deleteUserById = asyncHandler(async (req, res) => {
 });
 
 const searchUserByUsernameOrEmail = asyncHandler(async (req, res) => {
-  const { username, email } = req.body;
-
-  if (!username && !email) {
-    throw new Error("Missing Input");
-  }
+  const { fullname, email } = req.params;
 
   const searchUser = await UserModel.find({
-    username: new RegExp(username, "i"),
+    fullname: new RegExp(fullname, "i"),
     email: new RegExp(email, "i"),
   });
 

@@ -162,10 +162,10 @@ const ListUser: React.FC = () => {
                 bordered
             />
             {
-                isModalOpen ? (<ModalCreateUser open={isModalOpen} onOk={handleOk} onCancel={handleCancel} uid={userId} />) : null
+                userId ? (<ModalCreateUser open={isModalOpen} onOk={handleOk} onCancel={handleCancel} uid={userId} />) : null
             }
             {
-                isModalOpenDelete ? (<ModalDeleteUser open={isModalOpenDelete} onOk={handleOkDelete} onCancel={handleCancelDelete} uid={userId} />) : null
+                userId ? (<ModalDeleteUser open={isModalOpenDelete} onOk={handleOkDelete} onCancel={handleCancelDelete} uid={userId} />) : null
             }
         </ConfigProvider>
 

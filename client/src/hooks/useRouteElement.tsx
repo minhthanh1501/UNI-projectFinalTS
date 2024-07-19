@@ -14,12 +14,11 @@ import MainGroup from "@/pages/Group/MainGroup";
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
-
   return isAuthenticated ? <Outlet /> : <Navigate to={"/login"} />; //chưa dăng nhập thì đá ra màn hình login, đã đăng nhập thì tiếp tục render route con
 }
 
 function RejectedRoute() {
-  const isAuthenticated = false;
+  const isAuthenticated = useContext(AppContext);
   return !isAuthenticated ? <Outlet /> : <Navigate to={"/"} />; //đã dăng nhập thì đá ra màn hình chính, chưa đăng nhập thì tiếp tục render route con
 }
 

@@ -6,10 +6,13 @@ export interface User {
   password: string;
   fullname: string;
   email: string;
+  unit: string;
+  managerment_agent: string;
+  position: string;
   phone?: string;
   address?: string;
   role: Role[];
-  actived: string;
+  active: string;
   createdAt: string;
   updatedAt: string;
   refreshToken?: string;
@@ -17,22 +20,24 @@ export interface User {
 
 export type Users = Pick<
   User,
-  "_id" | "username" | "fullname" | "role" | "actived"
+  "_id" | "username" | "fullname" | "role" | "active"
 >[];
 
 export type DataCreateUser = Omit<
   User,
-  | "_id"
-  | "phone"
-  | "address"
-  | "Role"
-  | "actived"
-  | "createdAt"
-  | "updatedAt"
-  | "refreshToken"
+  "_id" | "phone" | "address" | "Role" | "active"
 >;
 
 export type DataUpdateUser = Pick<
   User,
-  "password" | "fullname" | "email" | "phone" | "address"
+  | "_id"
+  | "password"
+  | "fullname"
+  | "email"
+  | "phone"
+  | "address"
+  | "active"
+  | "position"
+  | "managerment_agent"
+  | "unit"
 >;

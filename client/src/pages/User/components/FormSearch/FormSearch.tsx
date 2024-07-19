@@ -1,12 +1,48 @@
 import { ConfigProvider, Form, Input } from "antd"
 import ButtonCustom from "../Button/ButtonCustom"
 import { ClockCircleOutlined, SearchOutlined } from "@ant-design/icons"
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
+import { apiGetUsersBySearch } from "../../apis";
+
 
 
 const FormSearch = () => {
+    const [form] = Form.useForm();
+    const [searchParams, setSearchParams] = useSearchParams()
 
-    const onSearch = () => {
-        console.log("ok")
+    // const SearchUsersMutation = useMutation({
+    //     mutationFn: (value: { email: string | null, fullname: string | null }) => apiGetUsersBySearch(value)
+    // })
+    const email = searchParams.get("email")
+    const fullname = searchParams.get("fullname")
+
+    const SearchUsersQuery = useQuery({
+        queryKey: ['search'],
+        queryFn: () => apiGetUsersBySearch({ email, fullname }),
+        enabled: false
+    })
+
+    const setParams = (Obj: any) => {
+        const keyArr = Object.keys(Obj);
+
+        keyArr.forEach((key) => {
+            if (Obj[key]) {
+                searchParams.set(key, Obj[key]);
+            } else {
+                searchParams.delete(key);
+            }
+            setSearchParams(searchParams);
+        });
+    }
+
+    const onSearch = (value: object) => {
+        setParams(value)
+        // const email = searchParams.get("email")
+        // const fullname = searchParams.get("fullname")
+        SearchUsersQuery.refetch()
+        // SearchUsersMutation.mutate({ email, fullname })
+        // console.log(email, fullname);
     }
 
     return (
@@ -19,6 +55,7 @@ const FormSearch = () => {
                 }}
             >
                 <Form
+                    form={form}
                     onFinish={onSearch}
                     name="layout-multiple-horizontal"
                     layout="inline"
@@ -59,6 +96,7 @@ const FormSearch = () => {
                                     color: "white",
                                     fontWeight: "500"
                                 }}
+                                htmlType="submit"
                                 nameButton={"Tìm kiếm"}
                             />
                         </Form.Item>

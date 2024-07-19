@@ -9,17 +9,14 @@ const NavHead = () => {
 
     const showModal = () => {
         setIsModalOpen(true);
-        console.log("show")
     };
 
     const handleOk = () => {
         setIsModalOpen(false);
-        console.log("ok");
     };
 
     const handleCancel = () => {
         setIsModalOpen(false);
-        console.log("cancel");
     };
     return (
         <div className="flex justify-between">

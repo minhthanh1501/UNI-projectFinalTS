@@ -10,6 +10,6 @@ router.get("/getall", ctrls.getUsers);
 router.get("/:_id", ctrls.getUserById);
 router.put("/", ctrls.updateUserById);
 router.delete("/:_id", ctrls.deleteUserById);
-router.post("/searchuser", ctrls.searchUserByUsernameOrEmail);
+router.get("/searchuser", ctrls.searchUserByUsernameOrEmail);
 
 module.exports = router;

@@ -23,6 +23,28 @@ const createGroup = asyncHandler(async (req, res) => {
   });
 });
 
+const getGroups = asyncHandler(async (req, res) => {
+  const response = await GroupModel.find();
+
+  return res.status(200).json({
+    success: response ? true : false,
+    message: response ? "Get Groups success!" : "Something went wrong",
+    groupData: response,
+  });
+});
+
+const getGroupById = asyncHandler(async (req, res) => {
+  const { _id } = req.query;
+
+  const response = await GroupModel.findById(_id);
+
+  return res.status(200).json({
+    success: response ? true : false,
+    message: response ? "Get Group success!" : "Something went wrong",
+    groupData: response,
+  });
+});
+
 const updateGroupById = asyncHandler(async (req, res) => {
   const gid = req.params;
 
@@ -122,5 +144,6 @@ module.exports = {
   searchByGroupname,
   getUsersByGroupId,
   deleteUserFromGroup,
-  addUserToGroup,
+  getGroups,
+  getGroupById,
 };

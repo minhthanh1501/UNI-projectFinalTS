@@ -23,37 +23,36 @@ const FormLogin = () => {
     mutationFn: (value: AccountLogin) => {
       return apiLoginUser(value);
     },
+    onSuccess: (result) => {
+      if (result.data.success) {
+        const { accessToken, userData } = result.data;
+
+        const jsonStringify = JSON.stringify(userData);
+        setAccessTokenToLocalStorage(accessToken);
+        setUserInfoToLocalStorage(jsonStringify);
+
+        setIsAuthenticated(Boolean(accessToken));
+        setUserInfo(userData);
+        toast.success(
+          <div style={{ textAlign: "center" }}>
+            <p>Đăng nhập thành công.</p>
+            <p>Đang chuyển hướng!</p>
+          </div>
+        );
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      } else {
+        toast.error("sai mật khẩu hoặc tài khoản");
+      }
+    },
+    onError: (error: any) => {
+      toast.error("lỗi line 43", error);
+    },
   },);
 
   const onFinish = (value: AccountLogin) => {
-    loginUserMutation.mutate(value, {
-      onSuccess: (result) => {
-        if (result.data.success) {
-          const { accessToken, userData } = result.data;
-
-          const jsonStringify = JSON.stringify(userData);
-          setAccessTokenToLocalStorage(accessToken);
-          setUserInfoToLocalStorage(jsonStringify);
-
-          setIsAuthenticated(Boolean(accessToken));
-          setUserInfo(userData);
-          toast.success(
-            <div style={{ textAlign: "center" }}>
-              <p>Đăng nhập thành công.</p>
-              <p>Đang chuyển hướng!</p>
-            </div>
-          );
-          setTimeout(() => {
-            navigate("/");
-          }, 1500);
-        } else {
-          toast.error("sai mật khẩu hoặc tài khoản");
-        }
-      },
-      onError: (error: any) => {
-        toast.error("lỗi line 43", error);
-      },
-    });
+    loginUserMutation.mutate(value);
   };
 
   return (

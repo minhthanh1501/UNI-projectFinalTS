@@ -1,5 +1,10 @@
 import axios from "@/apis/axiosClient";
-import { DataCreateUser, User, Users } from "../@types/user.type";
+import {
+  DataCreateUser,
+  DataUpdateUser,
+  User,
+  Users,
+} from "../@types/user.type";
 
 export const apiGetUsers = () => {
   return axios.get<Users>("/user/getall");
@@ -15,4 +20,23 @@ export const apiDeleteUserById = (_id: string | number | undefined) => {
 
 export const apiCreateUser = (body: DataCreateUser) => {
   return axios.post<User>("/user/", body);
+};
+
+export const apiUpdateUserById = (body: DataUpdateUser) => {
+  return axios.put<User>("/user/", body);
+};
+
+export const apiGetUsersBySearch = ({
+  email,
+  fullname,
+}: {
+  email: string | null;
+  fullname: string | null;
+}) => {
+  return axios.get<Users>("/user/searchuser", {
+    params: {
+      email,
+      fullname,
+    },
+  });
 };
