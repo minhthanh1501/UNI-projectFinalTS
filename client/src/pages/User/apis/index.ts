@@ -2,20 +2,21 @@ import axios from "@/apis/axiosClient";
 import {
   DataCreateUser,
   DataUpdateUser,
+  ParamsGetUsersProp,
   User,
   Users,
 } from "../@types/user.type";
 
-export const apiGetUsers = () => {
-  return axios.get<Users>("/user/getall");
+export const apiGetUsers = (paramsProp: ParamsGetUsersProp) => {
+  return axios.get<Users>("/user/getusers", { params: paramsProp });
 };
 
 export const apiGetUserById = (_id: string | number | undefined) => {
-  return axios.get<User>(`/user/${_id}`);
+  return axios.get<User>(`/user/getuser/${_id}`);
 };
 
 export const apiDeleteUserById = (_id: string | number | undefined) => {
-  return axios.delete<{}>(`/user/${_id}`);
+  return axios.delete<{}>(`/user/getuser/${_id}`);
 };
 
 export const apiCreateUser = (body: DataCreateUser) => {
@@ -23,7 +24,7 @@ export const apiCreateUser = (body: DataCreateUser) => {
 };
 
 export const apiUpdateUserById = (body: DataUpdateUser) => {
-  return axios.put<User>("/user/", body);
+  return axios.put<User>("/user/getuser/", body);
 };
 
 export const apiGetUsersBySearch = ({

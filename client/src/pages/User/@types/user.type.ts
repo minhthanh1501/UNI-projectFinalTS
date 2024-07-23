@@ -12,7 +12,7 @@ export interface User {
   phone?: string;
   address?: string;
   role: Role[];
-  active: string;
+  active: boolean;
   createdAt: string;
   updatedAt: string;
   refreshToken?: string;
@@ -41,3 +41,8 @@ export type DataUpdateUser = Pick<
   | "managerment_agent"
   | "unit"
 >;
+
+export interface ParamsGetUsersProp {
+  fullname: string | null;
+  email: string | null;
+}

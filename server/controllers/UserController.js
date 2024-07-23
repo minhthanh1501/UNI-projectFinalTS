@@ -7,7 +7,23 @@ const {
 const UserModel = require("../models/UserModel");
 
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await userModel.find();
+  const { email, fullname, limit } = req.query;
+
+  const searchCriteria = {};
+  if (fullname) {
+    searchCriteria.fullname = new RegExp(fullname, "i");
+  }
+  if (email) {
+    searchCriteria.email = new RegExp(email, "i");
+  }
+
+  let query = userModel.find(searchCriteria);
+
+  if (limit) {
+    query = query.limit(parseInt(limit));
+  }
+
+  const users = await query;
 
   return res.status(200).json({
     success: users ? true : false,
@@ -59,21 +75,6 @@ const deleteUserById = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: user ? true : false,
     message: user ? "Delete User Success!" : "Something went wrong",
-  });
-});
-
-const searchUserByUsernameOrEmail = asyncHandler(async (req, res) => {
-  const { fullname, email } = req.params;
-
-  const searchUser = await UserModel.find({
-    fullname: new RegExp(fullname, "i"),
-    email: new RegExp(email, "i"),
-  });
-
-  return res.status(200).json({
-    status: searchUser ? true : false,
-    message: searchUser ? "Search user success!" : "Something went wrong",
-    userData: searchUser,
   });
 });
 
@@ -206,5 +207,4 @@ module.exports = {
   getUserById,
   deleteUserById,
   updateUserById,
-  searchUserByUsernameOrEmail,
 };

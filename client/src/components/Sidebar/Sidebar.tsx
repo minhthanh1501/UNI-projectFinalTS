@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import {
   CaretRightOutlined,
-  DesktopOutlined,
-  FileOutlined,
   PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Layout, Menu, } from 'antd';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
 
@@ -35,6 +31,22 @@ function getItem(
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate()
+
+  const location = useLocation()
+  const pathname = location.pathname;
+  const pathSegments = pathname.split('/').filter(segment => segment);
+  const lastSegment = pathSegments[pathSegments.length - 1];
+
+  const defaultSelectK = (() => {
+    switch (lastSegment) {
+      case "nguoidung":
+        return '2';
+      case "nhomnguoidung":
+        return '3';
+      default:
+        return '1';
+    }
+  })();
 
   const items: MenuItem[] = [
     getItem('Hệ thống', '1', <PieChartOutlined />, [
@@ -63,7 +75,7 @@ const Sidebar = () => {
     >
       <Menu
         theme="dark"
-        defaultSelectedKeys={["1"]}
+        defaultSelectedKeys={[defaultSelectK]}
         mode="inline"
         style={{
           backgroundColor: "#141414",

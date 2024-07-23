@@ -9,6 +9,6 @@ export interface Group {
 
 export type Groups = Group[];
 
-export type CreateDataGroup = Pick<Group, "code" | "name">;
+export type DataCreateGroup = Pick<Group, "code" | "name">;
 
-export type UpdateDataGroup = Omit<Group, "members">;
+export type DataUpdateGroup = Omit<Group, "members">;

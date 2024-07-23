@@ -1,30 +1,35 @@
+import { UpdateDataGroup } from "./../@types/group.type";
 import axios from "@/apis/axiosClient";
 import {
-  CreateDataGroup,
+  DataCreateGroup,
   Group,
   Groups,
-  UpdateDataGroup,
+  DataUpdateGroup,
 } from "../@types/group.type";
 import { Users } from "@/pages/User/@types/user.type";
 
-export const apiCreateGroup = () => {
-  return axios.post<CreateDataGroup>("/");
+export const apiCreateGroup = (body: DataCreateGroup) => {
+  return axios.post<Group>("/group/", body);
 };
 
-export const apiGetGroups = () => {
-  return axios.get<Groups>("/getgroups");
+export const apiUpdateGroupById = (body: DataUpdateGroup) => {
+  return axios.put<Group>("/group/getgroup", body);
 };
 
-export const apiGetGroupById = () => {
-  return axios.get<Group>("/getgroup");
+export const apiGetGroups = (name: string | null) => {
+  return axios.get<Groups>("/group/getgroups", {
+    params: {
+      name,
+    },
+  });
 };
 
-export const apiUpdateGroupById = () => {
-  return axios.put<UpdateDataGroup>("/group");
+export const apiGetGroupById = (_id: string | number | undefined) => {
+  return axios.get<Group>(`/group/getgroup/${_id}`);
 };
 
 export const apiDeleteGroupById = (_id: string | number) => {
-  return axios.delete<{}>("/");
+  return axios.delete<{}>(`/group/getgroup/${_id}`);
 };
 
 export const apiGetUsersByGroupId = () => {

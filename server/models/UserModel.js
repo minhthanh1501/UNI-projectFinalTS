@@ -51,9 +51,8 @@ var userSchema = new mongoose.Schema(
       default: "user",
     },
     active: {
-      type: String,
-      enum: ["actived", "unactived"],
-      default: "actived",
+      type: Boolean,
+      default: true,
     },
   },
   {

@@ -1,3 +1,5 @@
+import FormSearch from "./components/FormSearch"
+import ListGroup from "./components/ListGroup"
 import NavHead from "./components/NavHead"
 
 
@@ -8,10 +10,10 @@ const MainGroup = () => {
                 <NavHead />
             </div>
             <div className="px-7 py-3">
-                {/* <FormSearch /> */}
+                <FormSearch />
             </div>
             <div className="px-7 py-3">
-                {/* <ListUser /> */}
+                <ListGroup />
             </div>
         </div>
     )

@@ -24,7 +24,21 @@ const createGroup = asyncHandler(async (req, res) => {
 });
 
 const getGroups = asyncHandler(async (req, res) => {
-  const response = await GroupModel.find();
+  const { name } = req.query;
+
+  console.log(name);
+
+  const searchCriteria = {};
+
+  if (name) {
+    searchCriteria.name = new RegExp(name, "i");
+  }
+
+  let query = GroupModel.find(searchCriteria);
+
+  const response = await query;
+
+  console.log(response);
 
   return res.status(200).json({
     success: response ? true : false,
@@ -34,7 +48,7 @@ const getGroups = asyncHandler(async (req, res) => {
 });
 
 const getGroupById = asyncHandler(async (req, res) => {
-  const { _id } = req.query;
+  const { _id } = req.params;
 
   const response = await GroupModel.findById(_id);
 
@@ -46,12 +60,11 @@ const getGroupById = asyncHandler(async (req, res) => {
 });
 
 const updateGroupById = asyncHandler(async (req, res) => {
-  const gid = req.params;
+  const { _id, code, name } = req.body;
 
-  if (!gid || Object.keys(req.params).length === 0)
-    throw new Error("Missing inputs");
+  if (!name) throw new Error("Missing inputs");
 
-  const response = await GroupModel.findByIdAndUpdate(gid, req.body, {
+  const response = await GroupModel.findByIdAndUpdate(_id, req.body, {
     new: true,
   });
 
@@ -64,8 +77,10 @@ const updateGroupById = asyncHandler(async (req, res) => {
 
 const deleteGroupById = asyncHandler(async (req, res) => {
   const gid = req.params;
+  console.log(gid);
 
   const response = await GroupModel.findByIdAndDelete(gid);
+  console.log(response);
 
   return res.status(200).json({
     success: response ? true : false,

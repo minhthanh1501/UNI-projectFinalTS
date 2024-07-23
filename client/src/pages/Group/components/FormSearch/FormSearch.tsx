@@ -1,8 +1,8 @@
 import { ConfigProvider, Form, Input } from "antd"
-import ButtonCustom from "../Button/ButtonCustom"
 import { ClockCircleOutlined, SearchOutlined } from "@ant-design/icons"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+import ButtonCustom from "@/components/commons/ButtonCustom";
 
 
 
@@ -11,13 +11,9 @@ const FormSearch = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const queryClient = useQueryClient()
 
-    if (searchParams.get("email")) {
-        form.setFieldValue("email", searchParams.get("email"))
+    if (searchParams.get("name")) {
+        form.setFieldValue("name", searchParams.get("name"))
     }
-    if (searchParams.get("fullname")) {
-        form.setFieldValue("fullname", searchParams.get("fullname"))
-    }
-
 
     const setParams = (Obj: any) => {
         const keyArr = Object.keys(Obj);
@@ -33,10 +29,9 @@ const FormSearch = () => {
         });
     }
     const handleSubmit = () => {
-        let email = form.getFieldValue("email");
-        let fullname = form.getFieldValue("fullname");
-        setParams({ email, fullname });
-        queryClient.invalidateQueries({ queryKey: ["users", email, fullname] })
+        let name = form.getFieldValue("name");
+        setParams({ name });
+        queryClient.invalidateQueries({ queryKey: ["groups", name] })
     }
 
     return (
@@ -53,33 +48,24 @@ const FormSearch = () => {
                     // onFinish={onSearch}
                     name="layout-multiple-horizontal"
                     layout="inline"
-                    labelCol={{ span: 4 }}
-                    wrapperCol={{ span: 20 }}
+
                     style={{
                         width: "100%",
                         display: "flex",
-                        justifyContent: "",
+                        justifyContent: "center",
                     }}
                     variant="outlined"
                 >
                     <Form.Item
                         layout="vertical"
-                        label="Email"
-                        name="email"
+                        label="Name"
+                        name="name"
                         style={{
-                            width: "48%",
+                            width: "98%",
 
                         }}
                     >
-                        <Input style={{ backgroundColor: "transparent" }} placeholder="Email" />
-                    </Form.Item>
-                    <Form.Item
-                        layout="vertical"
-                        label="Họ và tên"
-                        name="fullname"
-                        style={{ width: "48%" }}
-                    >
-                        <Input style={{ backgroundColor: "transparent" }} placeholder="Họ và tên" />
+                        <Input style={{ backgroundColor: "transparent" }} placeholder="Name" />
                     </Form.Item>
                     <div className="py-3 flex justify-end w-full">
                         <Form.Item >
@@ -105,7 +91,6 @@ const FormSearch = () => {
                                 nameButton={"Làm mới"}
                                 type={"dashed"}
                                 htmlType="reset"
-
                             />
                         </Form.Item>
                     </div>

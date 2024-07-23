@@ -1,6 +1,7 @@
 import { ClockCircleOutlined, CloseCircleOutlined, PlusSquareOutlined } from "@ant-design/icons"
 import ButtonCustom from "@/components/commons/ButtonCustom";
 import { useState } from "react";
+import ModalCreateGroup from "../Modal/ModalCreateGroup";
 
 
 
@@ -56,7 +57,7 @@ const NavHead = () => {
                     disable={true}
                 />
                 {/* Modal */}
-                {/* {isModalOpen ? (<ModalCreateUser open={isModalOpen} onOk={handleOk} onCancel={handleCancel} />) : null} */}
+                {isModalOpen ? (<ModalCreateGroup open={isModalOpen} onOk={handleOk} onCancel={handleCancel} />) : null}
             </div>
         </div>
     )

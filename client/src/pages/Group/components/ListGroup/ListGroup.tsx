@@ -1,19 +1,17 @@
 import { Button, ConfigProvider, Space, Table, TableColumnsType, TableProps } from "antd";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiGetUsers } from "../../apis";
+import { useQuery } from "@tanstack/react-query";
+import { apiGetGroups } from "../../apis";
 import { useEffect, useState } from "react";
-import ModalCreateUser from "../Modal/ModalCreateUser";
+import ModalCreateGroup from "../Modal/ModalCreateGroup";
 import { DeleteFilled, EditFilled, MoreOutlined } from "@ant-design/icons";
-import ModalDeleteUser from "../Modal/ModalDeleteUser";
+import ModalDeleteGroup from "../Modal/ModalDeleteGroup";
 import { useSearchParams } from "react-router-dom";
-
 
 interface DataType {
     key: React.Key;
     _id: string;
-    username: React.ReactNode;
-    fullname: string;
-    email: string;
+    code: string;
+    name: string;
 }
 
 
@@ -23,18 +21,17 @@ const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter,
 };
 
 
-const ListUser: React.FC = () => {
+const ListGroup = () => {
     const [data, setData] = useState<DataType[]>([])
     const dataWithKey: DataType[] = [];
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isModalOpenDelete, setIsModalOpenDelete] = useState<boolean>(false);
-    const [userId, setUserId] = useState<string | number>()
-    const queryClient = useQueryClient()
+    const [groupId, setGroupId] = useState<string | number>()
     const [searchParams, setSearchParams] = useSearchParams()
 
     const showModal = (id: string | number) => {
         setIsModalOpen(true);
-        setUserId(id)
+        setGroupId(id)
     };
 
     const handleOk = () => {
@@ -43,13 +40,13 @@ const ListUser: React.FC = () => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
-        setUserId(undefined)
+        setGroupId(undefined)
     };
 
     // Modal delete
     const showModalDelete = (id: string | number) => {
         setIsModalOpenDelete(true);
-        setUserId(id)
+        setGroupId(id)
     };
 
     const handleOkDelete = () => {
@@ -59,32 +56,30 @@ const ListUser: React.FC = () => {
 
     const handleCancelDelete = () => {
         setIsModalOpenDelete(false);
-        setUserId(undefined)
+        setGroupId(undefined)
     };
 
-    let email = searchParams.get("email") || null
-    let fullname = searchParams.get("fullname") || null
+    let name = searchParams.get("name") || null
 
     // react-query
-    const GetUserQuery = useQuery({
-        queryKey: ["users", email, fullname],
-        queryFn: () => apiGetUsers({ email, fullname })
+    const getGroupsQuery = useQuery({
+        queryKey: ["groups", name],
+        queryFn: () => apiGetGroups(name)
     })
 
     useEffect(() => {
-        if (GetUserQuery.data) {
-            setData(GetUserQuery.data.data.userData)
+        if (getGroupsQuery.data) {
+            setData(getGroupsQuery.data.data.groupData)
         }
 
-    }, [GetUserQuery.data])
+    }, [getGroupsQuery.data])
 
     for (let i = 0; i < data.length; i++) {
         dataWithKey.push({
             key: i + 1,
             _id: data[i]._id,
-            username: data[i].username,
-            fullname: data[i].fullname,
-            email: data[i].email,
+            code: data[i].code,
+            name: data[i].name,
         });
     }
 
@@ -99,26 +94,19 @@ const ListUser: React.FC = () => {
 
         },
         {
-            title: 'Tên đăng nhập',
-            dataIndex: 'username',
-            key: 'username',
+            title: 'Mã nhóm',
+            dataIndex: 'code',
+            key: 'code',
             fixed: 'left',
         },
         {
-            title: 'Họ tên',
-            dataIndex: 'fullname',
-            key: 'fullname',
+            title: 'Tên nhóm',
+            dataIndex: 'name',
+            key: 'name',
             fixed: 'left',
-            sorter: (a, b) => a.fullname.localeCompare(b.fullname),
+            sorter: (a, b) => a.name.localeCompare(b.name),
             width: 300
         },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-            sorter: (a, b) => a.email.localeCompare(b.email),
-        },
-
         {
             title: 'Thao tác',
             dataIndex: "key",
@@ -166,14 +154,14 @@ const ListUser: React.FC = () => {
                 bordered
             />
             {
-                userId ? (<ModalCreateUser open={isModalOpen} onOk={handleOk} onCancel={handleCancel} uid={userId} />) : null
+                groupId ? (<ModalCreateGroup open={isModalOpen} onOk={handleOk} onCancel={handleCancel} uid={groupId} />) : null
             }
             {
-                userId ? (<ModalDeleteUser open={isModalOpenDelete} onOk={handleOkDelete} onCancel={handleCancelDelete} uid={userId} />) : null
+                groupId ? (<ModalDeleteGroup open={isModalOpenDelete} onOk={handleOkDelete} onCancel={handleCancelDelete} uid={groupId} />) : null
             }
         </ConfigProvider>
 
     )
 }
 
-export default ListUser
+export default ListGroup

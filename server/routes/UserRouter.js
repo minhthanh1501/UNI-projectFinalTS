@@ -6,10 +6,9 @@ router.post("/register", ctrls.register);
 router.post("/", ctrls.register);
 router.post("/login", ctrls.login);
 router.get("/current", verifyAccessToken, ctrls.getCurrentUser);
-router.get("/getall", ctrls.getUsers);
-router.get("/:_id", ctrls.getUserById);
-router.put("/", ctrls.updateUserById);
-router.delete("/:_id", ctrls.deleteUserById);
-router.get("/searchuser", ctrls.searchUserByUsernameOrEmail);
+router.get("/getusers", ctrls.getUsers);
+router.put("/getuser", ctrls.updateUserById);
+router.get("/getuser/:_id", ctrls.getUserById);
+router.delete("/getuser/:_id", ctrls.deleteUserById);
 
 module.exports = router;
