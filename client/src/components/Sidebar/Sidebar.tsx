@@ -43,6 +43,8 @@ const Sidebar = () => {
         return '2';
       case "nhomnguoidung":
         return '3';
+      case "quyen":
+        return "4"
       default:
         return '1';
     }

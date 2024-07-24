@@ -8,6 +8,7 @@ const path = {
   DANH_MUC: "danhmuc",
   NGUOI_DUNG: "nguoidung",
   NHOM_NGUOI_DUNG: "nhomnguoidung",
+  THANH_VIEN: "thanhvien",
   QUYEN: "quyen",
 };
 

@@ -8,9 +8,15 @@ import { AppContext } from "@/contexts/app.context";
 import { useContext } from "react";
 import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
-import UserLayout from "@/pages/User/layouts";
-import MainUser from "@/pages/User/MainUser";
-import MainGroup from "@/pages/Group/MainGroup";
+
+import SystemLayout from "@/pages/System/layouts/SystemLayout";
+import MainUser from "@/pages/System/User/MainUser";
+import MainGroup from "@/pages/System/Group/MainGroup";
+import MainPermission from "@/pages/System/Permission/MainPermission";
+import UserLayout from "@/pages/System/User/layouts";
+import GroupLayout from "@/pages/System/Group/Layouts";
+import PermissionLayout from "@/pages/System/Permission/layouts";
+import UserGroup from "@/pages/System/Group/UserGroup";
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -40,17 +46,39 @@ export default function useRouteElement() {
           path: path.DANH_MUC,
           element: (
             <HomeLayout>
-              <UserLayout />
+              <SystemLayout />
             </HomeLayout>
           ),
           children: [
             {
               path: path.NGUOI_DUNG,
-              element: <MainUser />,
+              element: <UserLayout />,
+              children: [
+                {
+                  path: "",
+                  element: <MainUser />
+                }
+              ]
             },
             {
               path: path.NHOM_NGUOI_DUNG,
-              element: <MainGroup />
+              element: <GroupLayout />,
+              children: [
+                {
+                  path: "",
+                  element: <MainGroup />
+                },
+              ]
+            },
+            {
+              path: path.QUYEN,
+              element: <PermissionLayout />,
+              children: [
+                {
+                  path: "",
+                  element: <MainPermission />
+                }
+              ]
             }
           ]
         },

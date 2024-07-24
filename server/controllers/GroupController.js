@@ -123,7 +123,7 @@ const addUserToGroup = asyncHandler(async (req, res) => {
 
   const response = await GroupModel.findByIdAndUpdate(
     groupId,
-    { $addToSet: { users: userId } },
+    { $addToSet: { user_id: userId } },
     { new: true }
   );
 

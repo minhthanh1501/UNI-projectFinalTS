@@ -46,10 +46,12 @@ var userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
-    role: {
-      type: String,
-      default: "user",
-    },
+    group_id: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "groups",
+      },
+    ],
     active: {
       type: Boolean,
       default: true,

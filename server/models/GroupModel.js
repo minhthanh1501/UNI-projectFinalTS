@@ -12,13 +12,10 @@ var groupSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    members: [
+    user_id: [
       {
-        user: {
-          type: mongoose.Types.ObjectId,
-          ref: "User",
-        },
-        role: String,
+        type: mongoose.Types.ObjectId,
+        ref: "User",
       },
       ,
     ],
