@@ -5,7 +5,8 @@ import {
   Groups,
   DataUpdateGroup,
 } from "../@types/group.type";
-import { ApiGroupResponse } from "@/@types/response.type";
+import { ApiGroupResponse, ApiUserResponse } from "@/@types/response.type";
+import { User, Users } from "../../User/@types/user.type";
 
 export const apiCreateGroup = (body: DataCreateGroup) => {
   return axios.post<Group>("/group/", body);
@@ -24,21 +25,17 @@ export const apiGetGroups = (name: string | null) => {
 };
 
 export const apiGetGroupById = (_id: string | number | undefined) => {
-  return axios.get<Group>(`/group/getgroup/${_id}`);
+  return axios.get<ApiGroupResponse<Group>>(`/group/getgroup/${_id}`);
 };
 
 export const apiDeleteGroupById = (_id: string | number) => {
   return axios.delete<{}>(`/group/getgroup/${_id}`);
 };
 
-// export const apiGetUsersByGroupId = () => {
-//   return axios.get<Users>("/group");
-// };
-
-export const apiAddUserToGroup = () => {
-  return axios.get<Groups>("/group");
+export const apiAddUserToGroup = (data: { gid: string; uid: string[] }) => {
+  return axios.post<ApiUserResponse<Users>>("/user/addusertogroup", data);
 };
 
-export const apiDeleteUserFromGroup = () => {
-  return axios.get<{}>("/group");
+export const apiDeleteUserFromGroup = (data: { gid: string; uid: string }) => {
+  return axios.post<ApiUserResponse<User>>("/user/deleteuserfromgroup", data);
 };

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ModalCreateGroup from "../Modal/ModalCreateGroup";
 import { DeleteFilled, EditFilled, SettingOutlined, UsergroupDeleteOutlined } from "@ant-design/icons";
 import ModalDeleteGroup from "../Modal/ModalDeleteGroup";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Groups } from "../../@types/group.type";
 import ModalListUser from "../Modal/ModalListUser";
 
@@ -15,6 +15,8 @@ interface DataType {
     code: string;
     name: string;
 }
+
+// type TableRowSelection<T> = TableProps<T>['rowSelection'];
 
 
 
@@ -29,10 +31,11 @@ const ListGroup = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isModalOpenListUser, setIsModalOpenListUser] = useState<boolean>(false);
     const [isModalOpenDelete, setIsModalOpenDelete] = useState<boolean>(false);
-    const [groupId, setGroupId] = useState<string | number>()
+    const [groupId, setGroupId] = useState<string>()
     const [searchParams, setSearchParams] = useSearchParams()
+    // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
-    const showModal = (id: string | number) => {
+    const showModal = (id: string) => {
         setIsModalOpen(true);
         setGroupId(id)
     };
@@ -47,7 +50,7 @@ const ListGroup = () => {
     };
 
     // Modal delete
-    const showModalDelete = (id: string | number) => {
+    const showModalDelete = (id: string) => {
         setIsModalOpenDelete(true);
         setGroupId(id)
     };
@@ -63,7 +66,7 @@ const ListGroup = () => {
     };
 
     // Modal List User
-    const showModalListUser = (id: string | number) => {
+    const showModalListUser = (id: string) => {
         setIsModalOpenListUser(true);
         setGroupId(id)
     };
@@ -100,8 +103,6 @@ const ListGroup = () => {
             name: data[i].name,
         });
     }
-
-
 
     const columns: TableColumnsType<DataType> = [
         Table.SELECTION_COLUMN,
@@ -145,6 +146,22 @@ const ListGroup = () => {
         },
     ];
 
+    // const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    //     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    //     setSelectedRowKeys(newSelectedRowKeys);
+    // };
+
+    // const rowSelection: TableRowSelection<DataType> = {
+    //     selectedRowKeys,
+    //     onChange: onSelectChange,
+    // };
+
+    // const handleClickSelection = () => {
+    //     console.log("hehe");
+    // }
+
+    // const hasSelected = selectedRowKeys.length > 0;
+
     return (
         <ConfigProvider
             theme={{
@@ -182,9 +199,9 @@ const ListGroup = () => {
             {
                 groupId ? (<ModalDeleteGroup open={isModalOpenDelete} onOk={handleOkDelete} onCancel={handleCancelDelete} uid={groupId} />) : null
             }
-            {/* {
-                groupId ? (<ModalListUser open={isModalOpenDelete} onOk={handleOkDelete} onCancel={handleCancelDelete} uid={groupId} />) : null
-            } */}
+            {
+                groupId ? (<ModalListUser open={isModalOpenListUser} onOk={handleOkListUser} onCancel={handleCancelListUser} gid={groupId} />) : null
+            }
         </ConfigProvider>
 
     )

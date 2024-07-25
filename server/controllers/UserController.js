@@ -7,23 +7,24 @@ const {
 const UserModel = require("../models/UserModel");
 
 const getUsers = asyncHandler(async (req, res) => {
-  const { email, fullname, limit } = req.query;
+  const { email, fullname, gid } = req.query;
 
   const searchCriteria = {};
   if (fullname) {
-    searchCriteria.fullname = new RegExp(fullname, "i");
+    searchCriteria.fullname = { $regex: fullname, $options: "i" };
   }
   if (email) {
-    searchCriteria.email = new RegExp(email, "i");
+    searchCriteria.email = { $regex: email, $options: "i" };
+  }
+  if (gid) {
+    const groupIdsArray = Array.isArray(gid) ? gid : [gid];
+    searchCriteria.group_id = { $in: groupIdsArray };
   }
 
-  let query = userModel.find(searchCriteria);
-
-  if (limit) {
-    query = query.limit(parseInt(limit));
-  }
+  let query = userModel.find(searchCriteria).populate("group_id", "name");
 
   const users = await query;
+  console.log(users);
 
   return res.status(200).json({
     success: users ? true : false,
@@ -75,6 +76,59 @@ const deleteUserById = asyncHandler(async (req, res) => {
   return res.status(200).json({
     success: user ? true : false,
     message: user ? "Delete User Success!" : "Something went wrong",
+  });
+});
+
+const addUserToGroup = asyncHandler(async (req, res) => {
+  const { uid, gid } = req.body;
+  console.log(uid);
+  console.log(gid);
+
+  if (Array.isArray(uid)) {
+    uid.forEach(async (element) => {
+      const response = await UserModel.findByIdAndUpdate(
+        { _id: element },
+        { $push: { group_id: gid } },
+        { new: true }
+      );
+    });
+
+    return res.status(200).json({
+      status: true,
+      message: "Add Users in Group success!",
+      userData: null,
+    });
+  }
+
+  const response = await UserModel.findByIdAndUpdate(
+    { _id: uid },
+    { $push: { group_id: gid } },
+    { new: true }
+  );
+
+  return res.status(200).json({
+    status: response ? true : false,
+    message: response ? "Add Users in Group success!" : "Something went wrong",
+    userData: null,
+  });
+});
+
+const deleteUserFromGroup = asyncHandler(async (req, res) => {
+  const { uid } = req.body;
+  const { gid } = req.query;
+
+  const response = await userModel.findByIdAndUpdate(
+    { _id: uid },
+    { $pull: { group_id: gid } },
+    { new: true }
+  );
+
+  return res.status(200).json({
+    status: response ? true : false,
+    message: response
+      ? "Delete Users in Group success!"
+      : "Something went wrong",
+    groupData: response,
   });
 });
 
@@ -207,4 +261,6 @@ module.exports = {
   getUserById,
   deleteUserById,
   updateUserById,
+  addUserToGroup,
+  deleteUserFromGroup,
 };

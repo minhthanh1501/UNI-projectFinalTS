@@ -49,7 +49,7 @@ var userSchema = new mongoose.Schema(
     group_id: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "groups",
+        ref: "Group",
       },
     ],
     active: {

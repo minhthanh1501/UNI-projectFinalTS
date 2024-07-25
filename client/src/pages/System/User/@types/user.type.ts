@@ -1,5 +1,3 @@
-type Role = "Admin || User";
-
 export interface User {
   _id: string;
   username: string;
@@ -11,18 +9,21 @@ export interface User {
   position: string;
   phone?: string;
   address?: string;
-  role: Role[];
+  group_id: string[];
   active: boolean;
   createdAt: string;
   updatedAt: string;
   refreshToken?: string;
 }
 
-export type Users = Pick<User, "_id" | "username" | "fullname" | "email">[];
+export type Users = Pick<
+  User,
+  "_id" | "username" | "fullname" | "group_id" | "email"
+>[];
 
 export type DataCreateUser = Omit<
   User,
-  "_id" | "phone" | "address" | "Role" | "active"
+  "_id" | "phone" | "address" | "group_id" | "active"
 >;
 
 export type DataUpdateUser = Pick<
@@ -40,6 +41,7 @@ export type DataUpdateUser = Pick<
 >;
 
 export interface ParamsGetUsersProp {
-  fullname: string | null;
-  email: string | null;
+  fullname?: string;
+  email?: string;
+  gid?: string;
 }

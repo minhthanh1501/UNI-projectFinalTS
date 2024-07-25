@@ -10,5 +10,7 @@ router.get("/getusers", ctrls.getUsers);
 router.put("/getuser", ctrls.updateUserById);
 router.get("/getuser/:_id", ctrls.getUserById);
 router.delete("/getuser/:_id", ctrls.deleteUserById);
+router.post("/addusertogroup", ctrls.addUserToGroup);
+router.post("/deleteuserfromgroup", ctrls.deleteUserFromGroup);
 
 module.exports = router;

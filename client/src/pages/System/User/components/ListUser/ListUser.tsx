@@ -62,8 +62,8 @@ const ListUser: React.FC = () => {
         setUserId(undefined)
     };
 
-    let email = searchParams.get("email") || null
-    let fullname = searchParams.get("fullname") || null
+    let email = searchParams.get("email") || undefined
+    let fullname = searchParams.get("fullname") || undefined
 
     // react-query
     const GetUserQuery = useQuery({
