@@ -1,5 +1,6 @@
 const GroupModel = require("../models/GroupModel");
 const asyncHandler = require("express-async-handler");
+const UserModel = require("../models/UserModel");
 
 const createGroup = asyncHandler(async (req, res) => {
   const { name } = req.body;
@@ -26,8 +27,6 @@ const createGroup = asyncHandler(async (req, res) => {
 const getGroups = asyncHandler(async (req, res) => {
   const { name } = req.query;
 
-  console.log(name);
-
   const searchCriteria = {};
 
   if (name) {
@@ -37,8 +36,6 @@ const getGroups = asyncHandler(async (req, res) => {
   let query = GroupModel.find(searchCriteria);
 
   const response = await query;
-
-  console.log(response);
 
   return res.status(200).json({
     success: response ? true : false,
@@ -60,7 +57,7 @@ const getGroupById = asyncHandler(async (req, res) => {
 });
 
 const updateGroupById = asyncHandler(async (req, res) => {
-  const { _id, code, name } = req.body;
+  const { _id, name } = req.body;
 
   if (!name) throw new Error("Missing inputs");
 
@@ -77,14 +74,22 @@ const updateGroupById = asyncHandler(async (req, res) => {
 
 const deleteGroupById = asyncHandler(async (req, res) => {
   const gid = req.params;
-  console.log(gid);
+  const users = await UserModel.find({
+    group_id: { $in: gid._id.toString() },
+  }).select("group_id");
+
+  users.forEach(async (element) => {
+    await UserModel.findByIdAndUpdate(
+      { _id: element._id },
+      { $pull: { group_id: gid._id.toString() } }
+    );
+  });
 
   const response = await GroupModel.findByIdAndDelete(gid);
-  console.log(response);
 
   return res.status(200).json({
     success: response ? true : false,
-    message: response ? "Delete Successfully!" : "Cannot Delete Group!",
+    message: response ? "Delete Group Successfully!" : "Cannot Delete Group!",
   });
 });
 

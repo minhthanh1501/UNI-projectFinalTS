@@ -1,20 +1,25 @@
 import { ConfigProvider, Modal } from "antd"
-import { ModalGroupProps } from "../../../@types/modalprops.type"
+import { ModalGroupProps } from "../../@types/modalprops.type"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { apiDeleteUserFromGroup } from "../../../apis"
+import { apiDeleteUserFromGroup } from "../../apis"
+import toast from "react-hot-toast"
 
 
-const ModalDeleteUserFromGroup: React.FC<ModalGroupProps> = ({ open, onOk, onCancel, gid }) => {
+const ModalDeleteUserFromGroup: React.FC<ModalGroupProps> = ({ open, onOk, onCancel, gid, uid }) => {
     const queryClient = useQueryClient()
 
     const DeleteUserFromGroupMutaion = useMutation({
-        mutationFn: () => apiDeleteUserFromGroup({ gid, uid: '' })
+        mutationFn: () => apiDeleteUserFromGroup({ gid, uid })
     })
 
     const handleOk = () => {
         DeleteUserFromGroupMutaion.mutate(undefined, {
             onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: ["users", gid] })
+                toast.success("Xóa người dùng khỏi nhóm thành công!",)
+            },
+            onError: () => {
+                toast.error("Không thành công",)
             }
         })
         onOk()

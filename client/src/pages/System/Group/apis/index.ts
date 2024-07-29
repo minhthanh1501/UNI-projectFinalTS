@@ -24,7 +24,7 @@ export const apiGetGroups = (name: string | null) => {
   });
 };
 
-export const apiGetGroupById = (_id: string | number | undefined) => {
+export const apiGetGroupById = (_id: string | number | undefined | null) => {
   return axios.get<ApiGroupResponse<Group>>(`/group/getgroup/${_id}`);
 };
 
@@ -36,6 +36,6 @@ export const apiAddUserToGroup = (data: { gid: string; uid: string[] }) => {
   return axios.post<ApiUserResponse<Users>>("/user/addusertogroup", data);
 };
 
-export const apiDeleteUserFromGroup = (data: { gid: string; uid: string }) => {
+export const apiDeleteUserFromGroup = (data: { gid: string; uid?: string }) => {
   return axios.post<ApiUserResponse<User>>("/user/deleteuserfromgroup", data);
 };

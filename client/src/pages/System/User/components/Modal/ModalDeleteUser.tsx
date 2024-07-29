@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Modal } from "antd"
 import { apiDeleteUserById } from "../../apis"
+import toast from "react-hot-toast"
 
 interface ModalDeleteProps {
     open: boolean,
@@ -14,14 +15,18 @@ const ModalDeleteUser: React.FC<ModalDeleteProps> = ({ open, onOk, onCancel, uid
 
     const DeleteUserMutation = useMutation({
         mutationFn: (id: string | number) => apiDeleteUserById(id),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] })
-        }
-
     })
 
     const handleOk = () => {
-        DeleteUserMutation.mutate(uid)
+        DeleteUserMutation.mutate(uid, {
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['users'] })
+                toast.success("Xóa người dùng thành công")
+            },
+            onError: () => {
+                toast.error("Không thành công")
+            }
+        })
         onOk();
     }
 

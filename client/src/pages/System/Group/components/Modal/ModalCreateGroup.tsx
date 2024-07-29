@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { DataCreateGroup, DataUpdateGroup } from "../../@types/group.type";
 import { Group } from "../../@types/group.type";
 import { apiCreateGroup, apiGetGroupById, apiUpdateGroupById } from "../../apis";
+import toast from "react-hot-toast";
 
 type ThemeModal = {
     backgroundColor: string,
@@ -23,27 +24,27 @@ interface ModalCreateGroupProps {
     open: boolean,
     onOk: () => void,
     onCancel: () => void,
-    uid?: string | number
+    gid?: string | number
 }
 
-const ModalCreateGroup: React.FC<ModalCreateGroupProps> = ({ open, onOk, onCancel, uid }) => {
+const ModalCreateGroup: React.FC<ModalCreateGroupProps> = ({ open, onOk, onCancel, gid }) => {
     const [form] = Form.useForm();
     const queryClient = useQueryClient()
     const [addMode, setAddMode] = useState<boolean>(true)
     const [groupData, setGroupData] = useState<Group>()
 
     useEffect(() => {
-        if (uid) {
+        if (gid) {
             setAddMode(false);
         } else {
             setAddMode(true);
         }
-    }, [uid]);
+    }, [gid]);
 
     const getGroupQuery = useQuery({
         queryKey: ["group"],
-        queryFn: () => apiGetGroupById(uid),
-        enabled: Boolean(uid),
+        queryFn: () => apiGetGroupById(gid),
+        enabled: Boolean(gid),
     })
 
     useEffect(() => {
@@ -67,6 +68,10 @@ const ModalCreateGroup: React.FC<ModalCreateGroupProps> = ({ open, onOk, onCance
         mutationFn: (value: DataCreateGroup) => apiCreateGroup(value),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['groups'] })
+            toast.success("Tạo nhóm thành công")
+        },
+        onError: (error) => {
+            toast.error(`Không thành công ${error}`)
         }
     })
 
@@ -74,6 +79,10 @@ const ModalCreateGroup: React.FC<ModalCreateGroupProps> = ({ open, onOk, onCance
         mutationFn: (value: DataUpdateGroup) => apiUpdateGroupById(value),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['groups'] })
+            toast.success("Cập nhật nhóm thành công")
+        },
+        onError: (error) => {
+            toast.error(`Không thành công ${error}`)
         }
     })
 
@@ -100,11 +109,6 @@ const ModalCreateGroup: React.FC<ModalCreateGroupProps> = ({ open, onOk, onCance
                         colorBorder: "#222222",
                         colorBgContainerDisabled: "transparent"
                     },
-                    components: {
-                        Button: {
-
-                        },
-                    }
                 }}
 
             >

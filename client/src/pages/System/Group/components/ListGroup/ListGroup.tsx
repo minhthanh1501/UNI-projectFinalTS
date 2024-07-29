@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import ModalCreateGroup from "../Modal/ModalCreateGroup";
 import { DeleteFilled, EditFilled, SettingOutlined, UsergroupDeleteOutlined } from "@ant-design/icons";
 import ModalDeleteGroup from "../Modal/ModalDeleteGroup";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Groups } from "../../@types/group.type";
-import ModalListUser from "../Modal/ModalListUser";
+import { getQueryParams } from "@/utils/helpers";
 
 interface DataType {
     key: React.Key;
@@ -29,10 +29,10 @@ const ListGroup = () => {
     const [data, setData] = useState<Groups>([])
     const dataWithKey: DataType[] = [];
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [isModalOpenListUser, setIsModalOpenListUser] = useState<boolean>(false);
     const [isModalOpenDelete, setIsModalOpenDelete] = useState<boolean>(false);
     const [groupId, setGroupId] = useState<string>()
-    const [searchParams, setSearchParams] = useSearchParams()
+    const navigate = useNavigate()
+    const location = useLocation()
     // const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
     const showModal = (id: string) => {
@@ -66,22 +66,12 @@ const ListGroup = () => {
     };
 
     // Modal List User
-    const showModalListUser = (id: string) => {
-        setIsModalOpenListUser(true);
-        setGroupId(id)
+    const handleNavigate = (gid: string) => {
+        navigate(`${location.pathname}?gid=${gid}`)
     };
 
-    const handleOkListUser = () => {
-        setIsModalOpenListUser(false);
-    };
 
-    const handleCancelListUser = () => {
-        setIsModalOpenListUser(false);
-        setGroupId(undefined)
-    };
-
-    let name = searchParams.get("name") || null
-
+    let { name } = getQueryParams()
     // react-query
     const getGroupsQuery = useQuery({
         queryKey: ["groups", name],
@@ -134,7 +124,7 @@ const ListGroup = () => {
                 <Space size="middle">
                     <Button title="Sửa" icon={<EditFilled />} shape="circle" onClick={() => showModal(record._id)}>
                     </Button>
-                    <Button title="Thành viên" icon={<UsergroupDeleteOutlined />} shape="circle" onClick={() => showModalListUser(record._id)} >
+                    <Button title="Thành viên" icon={<UsergroupDeleteOutlined />} shape="circle" onClick={() => handleNavigate(record._id)} >
                     </Button>
                     <Button title="Phân quyền" icon={<SettingOutlined />} shape="circle">
                     </Button>
@@ -160,8 +150,6 @@ const ListGroup = () => {
     //     console.log("hehe");
     // }
 
-    // const hasSelected = selectedRowKeys.length > 0;
-
     return (
         <ConfigProvider
             theme={{
@@ -179,10 +167,6 @@ const ListGroup = () => {
                         rowSelectedHoverBg: "#1C1C1C",
                         colorIcon: "white",
                     },
-                    Checkbox: {
-
-                    },
-
                 }
             }}
         >
@@ -194,13 +178,10 @@ const ListGroup = () => {
                 bordered
             />
             {
-                groupId ? (<ModalCreateGroup open={isModalOpen} onOk={handleOk} onCancel={handleCancel} uid={groupId} />) : null
+                groupId ? (<ModalCreateGroup open={isModalOpen} onOk={handleOk} onCancel={handleCancel} gid={groupId} />) : null
             }
             {
-                groupId ? (<ModalDeleteGroup open={isModalOpenDelete} onOk={handleOkDelete} onCancel={handleCancelDelete} uid={groupId} />) : null
-            }
-            {
-                groupId ? (<ModalListUser open={isModalOpenListUser} onOk={handleOkListUser} onCancel={handleCancelListUser} gid={groupId} />) : null
+                groupId ? (<ModalDeleteGroup open={isModalOpenDelete} onOk={handleOkDelete} onCancel={handleCancelDelete} gid={groupId} />) : null
             }
         </ConfigProvider>
 

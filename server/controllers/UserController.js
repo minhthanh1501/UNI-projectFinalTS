@@ -21,10 +21,9 @@ const getUsers = asyncHandler(async (req, res) => {
     searchCriteria.group_id = { $in: groupIdsArray };
   }
 
-  let query = userModel.find(searchCriteria).populate("group_id", "name");
+  let query = userModel.find(searchCriteria).populate("group_id", "_id");
 
   const users = await query;
-  console.log(users);
 
   return res.status(200).json({
     success: users ? true : false,
@@ -81,8 +80,6 @@ const deleteUserById = asyncHandler(async (req, res) => {
 
 const addUserToGroup = asyncHandler(async (req, res) => {
   const { uid, gid } = req.body;
-  console.log(uid);
-  console.log(gid);
 
   if (Array.isArray(uid)) {
     uid.forEach(async (element) => {
@@ -114,8 +111,25 @@ const addUserToGroup = asyncHandler(async (req, res) => {
 });
 
 const deleteUserFromGroup = asyncHandler(async (req, res) => {
-  const { uid } = req.body;
-  const { gid } = req.query;
+  const { gid, uid } = req.body;
+
+  if (Array.isArray(uid)) {
+    uid.forEach(async (element) => {
+      const response = await userModel.findByIdAndUpdate(
+        { _id: element },
+        { $pull: { group_id: gid } },
+        { new: true }
+      );
+    });
+
+    return res.status(200).json({
+      status: response ? true : false,
+      message: response
+        ? "Delete Users in Group success!"
+        : "Something went wrong",
+      groupData: null,
+    });
+  }
 
   const response = await userModel.findByIdAndUpdate(
     { _id: uid },
@@ -128,7 +142,7 @@ const deleteUserFromGroup = asyncHandler(async (req, res) => {
     message: response
       ? "Delete Users in Group success!"
       : "Something went wrong",
-    groupData: response,
+    groupData: null,
   });
 });
 

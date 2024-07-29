@@ -3,4 +3,5 @@ export interface ModalGroupProps {
   onOk: () => void;
   onCancel: () => void;
   gid: string;
+  uid?: string;
 }

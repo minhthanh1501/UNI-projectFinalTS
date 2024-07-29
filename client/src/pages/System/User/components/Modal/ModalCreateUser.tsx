@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiCreateUser, apiGetUserById, apiUpdateUserById } from "../../apis";
 import { DataCreateUser, DataUpdateUser, User } from "../../@types/user.type";
+import toast from "react-hot-toast";
 const { Option } = Select;
 
 type ThemeModal = {
@@ -73,6 +74,10 @@ const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancel,
         mutationFn: (value: DataCreateUser) => apiCreateUser(value),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] })
+            toast.success("Thêm người dùng thành công")
+        },
+        onError: () => {
+            toast.error("Không thành công")
         }
     })
 
@@ -80,6 +85,10 @@ const ModalCreateUser: React.FC<ModalCreateUserProps> = ({ open, onOk, onCancel,
         mutationFn: (value: DataUpdateUser) => apiUpdateUserById(value),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['users'] })
+            toast.success("Thêm người dùng thành công")
+        },
+        onError: () => {
+            toast.error("Không thành công")
         }
     })
 

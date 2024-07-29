@@ -15,7 +15,7 @@ export const apiGetUsers = (paramsProp: ParamsGetUsersProp) => {
 };
 
 export const apiGetUserById = (_id: string | number | undefined) => {
-  return axios.get<User>(`/user/getuser/${_id}`);
+  return axios.get<ApiUserResponse<User>>(`/user/getuser/${_id}`);
 };
 
 export const apiDeleteUserById = (_id: string | number | undefined) => {
