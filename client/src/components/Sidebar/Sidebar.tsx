@@ -83,6 +83,7 @@ const Sidebar = () => {
           backgroundColor: "#141414",
         }}
         items={items}
+
       >
       </Menu>
     </Sider>

@@ -3,9 +3,10 @@ import ListGroup from "./components/ListGroup"
 import NavHead from "./components/NavHead"
 import MembersGroup from "./components/MembersGroup"
 import { useQueryParams } from "@/hooks/useQueryParams"
+import ListMenu from "./components/ListMenu"
 
 const MainGroup = () => {
-    const { gid } = useQueryParams();
+    const { gid, code } = useQueryParams();
 
     return (
         <div>
@@ -23,10 +24,9 @@ const MainGroup = () => {
                 </div>
             ) : (
                 <div className="px-7 py-3">
-                    <MembersGroup />
+                    {code ? <ListMenu /> : <MembersGroup />}
                 </div>
-            )
-            }
+            )}
         </div>
     )
 }

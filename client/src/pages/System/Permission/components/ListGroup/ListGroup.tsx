@@ -66,8 +66,8 @@ const ListGroup = () => {
     };
 
     // Modal List User
-    const handleNavigate = (gid?: string, code?: string) => {
-        (gid && code) ? navigate(`${location.pathname}?gid=${gid}&code=${code}`) : navigate(`${location.pathname}?gid=${gid}`)
+    const handleNavigate = (gid: string) => {
+        navigate(`${location.pathname}?gid=${gid}`)
     };
 
 
@@ -126,7 +126,7 @@ const ListGroup = () => {
                     </Button>
                     <Button title="Thành viên" icon={<UsergroupDeleteOutlined />} shape="circle" onClick={() => handleNavigate(record._id)} >
                     </Button>
-                    <Button title="Phân quyền" icon={<SettingOutlined />} shape="circle" onClick={() => handleNavigate(record._id, record.code)}>
+                    <Button title="Phân quyền" icon={<SettingOutlined />} shape="circle">
                     </Button>
                     <Button title="Xóa" icon={<DeleteFilled />} danger shape="circle" onClick={() => showModalDelete(record._id)}>
                     </Button>

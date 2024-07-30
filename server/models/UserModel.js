@@ -46,12 +46,10 @@ var userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
-    group_id: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Group",
-      },
-    ],
+    group_id: {
+      type: mongoose.Types.ObjectId,
+      ref: "Group",
+    },
     active: {
       type: Boolean,
       default: true,

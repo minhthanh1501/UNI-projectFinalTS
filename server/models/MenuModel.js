@@ -20,10 +20,11 @@ var menuSchema = new mongoose.Schema({
     required: true,
   },
   parent_id: {
-    type: String,
-    default: 0,
+    type: mongoose.Types.ObjectId,
+    ref: "Menu",
+    default: null,
   },
-  permission_id: [{ type: mongoose.Types.ObjectId, ref: "Permission" }],
+  permission_ids: [{ type: mongoose.Types.ObjectId, ref: "Permission" }],
 });
 
 //Export the model

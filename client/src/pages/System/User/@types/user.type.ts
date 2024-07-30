@@ -9,7 +9,7 @@ export interface User {
   position: string;
   phone?: string;
   address?: string;
-  group_id: string[];
+  group_id: { _id: string };
   active: boolean;
   createdAt: string;
   updatedAt: string;

@@ -1,15 +1,17 @@
 const GroupModel = require("../models/GroupModel");
+const MenuModel = require("../models/MenuModel");
 const asyncHandler = require("express-async-handler");
 const UserModel = require("../models/UserModel");
+const { getAllMenuCodes } = require("../utils/helpers");
 
 const createGroup = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+  const { code, name } = req.body;
 
-  if (!name) {
+  if (!name || !code) {
     throw new Error("Missing Input");
   }
 
-  const group = await GroupModel.findOne({ name });
+  const group = await GroupModel.findOne({ name }, { code });
 
   if (group) {
     throw new Error("Tên nhóm đã tồn tại");
@@ -30,7 +32,7 @@ const getGroups = asyncHandler(async (req, res) => {
   const searchCriteria = {};
 
   if (name) {
-    searchCriteria.name = new RegExp(name, "i");
+    searchCriteria.name = { $regex: name, $options: "i" };
   }
 
   let query = GroupModel.find(searchCriteria);
@@ -75,7 +77,7 @@ const updateGroupById = asyncHandler(async (req, res) => {
 const deleteGroupById = asyncHandler(async (req, res) => {
   const gid = req.params;
   const users = await UserModel.find({
-    group_id: { $in: gid._id.toString() },
+    group_id: gid._id.toString(),
   }).select("group_id");
 
   users.forEach(async (element) => {
@@ -93,21 +95,34 @@ const deleteGroupById = asyncHandler(async (req, res) => {
   });
 });
 
-const searchByGroupname = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+const checkMenuForGroup = asyncHandler(async (req, res) => {
+  const { gid } = req.query;
+  console.log(gid);
 
-  if (!name) {
-    throw new Error("Missing Input");
+  const menus = await MenuModel.find();
+
+  const response = await GroupModel.findById(gid);
+  console.log(response);
+
+  let matchedMenuCodes = [];
+
+  if (response.menu_ids) {
+    response.menu_ids.forEach((menu_id) => {
+      menus.forEach((menu) => {
+        if (menu._id.toString() === menu_id.toString()) {
+          console.log("menu_ids:", menu_id);
+          console.log("ID:", menu._id);
+          const menuCodes = getAllMenuCodes(menu);
+          matchedMenuCodes = [...new Set([...matchedMenuCodes, ...menuCodes])];
+        }
+      });
+    });
   }
 
-  const searchGroup = GroupModel.find({
-    name: new RegExp(username, "i"),
-  });
-
   return res.status(200).json({
-    status: searchGroup ? true : false,
-    message: searchGroup ? "Search group success!" : "Something went wrong",
-    groupData: searchGroup,
+    success: response ? true : false,
+    message: response ? "Get Group Successfully!" : "Something Went Wrong",
+    groupData: matchedMenuCodes,
   });
 });
 
@@ -115,7 +130,7 @@ module.exports = {
   createGroup,
   updateGroupById,
   deleteGroupById,
-  searchByGroupname,
   getGroups,
   getGroupById,
+  checkMenuForGroup,
 };

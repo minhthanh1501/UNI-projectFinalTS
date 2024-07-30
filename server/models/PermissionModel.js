@@ -13,8 +13,9 @@ var permissionSchema = new mongoose.Schema({
     unique: true,
   },
   parent_id: {
-    type: String,
-    default: 0,
+    type: mongoose.Types.ObjectId,
+    ref: "Permission",
+    default: null,
   },
 });
 

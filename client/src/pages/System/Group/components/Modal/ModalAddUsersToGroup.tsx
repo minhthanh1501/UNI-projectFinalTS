@@ -14,7 +14,7 @@ interface DataType {
     username: React.ReactNode;
     fullname: string;
     email: string;
-    group_id: string[]
+    group_id: { _id: string }
 }
 
 type TableRowSelection<T> = TableProps<T>['rowSelection'];
@@ -106,7 +106,7 @@ const ModalAddUsersToGroup: React.FC<ModalGroupProps> = ({ open, onOk, onCancel,
         selectedRowKeys,
         onChange: onSelectChange,
         getCheckboxProps: (record) => ({
-            disabled: record.group_id.some(item => item._id === gid),
+            disabled: record.group_id?._id === gid
         }),
     };
 

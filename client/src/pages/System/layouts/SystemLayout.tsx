@@ -1,8 +1,9 @@
 
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import ButtonCustom from '@/components/commons/ButtonCustom'
 const SystemLayout = () => {
+    const navigate = useNavigate()
     const location = useLocation()
     const pathname = location.pathname;
     const pathSegments = pathname.split('/').filter(segment => segment);
@@ -21,6 +22,7 @@ const SystemLayout = () => {
                     }}
                     type='default'
                     nameButton={""}
+                    onClick={() => navigate(-1)}
                 />
                 <h1 className='text-white font-bold text-xl'>{lastSegment}</h1>
             </div>

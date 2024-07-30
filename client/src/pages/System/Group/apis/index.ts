@@ -5,8 +5,18 @@ import {
   Groups,
   DataUpdateGroup,
 } from "../@types/group.type";
-import { ApiGroupResponse, ApiUserResponse } from "@/@types/response.type";
+import {
+  ApiGroupResponse,
+  ApiMenuResponse,
+  ApiUserResponse,
+} from "@/@types/response.type";
 import { User, Users } from "../../User/@types/user.type";
+import {
+  DataCreateMenu,
+  DataUpdateMenu,
+  Menu,
+  Menus,
+} from "../@types/menu.type";
 
 export const apiCreateGroup = (body: DataCreateGroup) => {
   return axios.post<Group>("/group/", body);
@@ -38,4 +48,33 @@ export const apiAddUserToGroup = (data: { gid: string; uid: string[] }) => {
 
 export const apiDeleteUserFromGroup = (data: { gid: string; uid?: string }) => {
   return axios.post<ApiUserResponse<User>>("/user/deleteuserfromgroup", data);
+};
+
+export const apiCheckMenuForGroup = (gid: string | undefined | null) => {
+  return axios.get<ApiGroupResponse<string[]>>("/group/menugroup", {
+    params: {
+      gid,
+    },
+  });
+};
+
+// --------MENU---------
+export const apiGetMenus = () => {
+  return axios.get<ApiMenuResponse<Menus>>("/menu");
+};
+
+export const apiGetMenuById = (_id: string) => {
+  return axios.get<ApiMenuResponse<Menu>>("/menu", {
+    params: {
+      _id,
+    },
+  });
+};
+
+export const apiCreateMenu = (data: DataCreateMenu) => {
+  return axios.post<ApiMenuResponse<Menu>>("/menu", data);
+};
+
+export const apiUpdateMenuById = (data: DataUpdateMenu) => {
+  return axios.put<ApiMenuResponse<Menu>>("/menu", data);
 };

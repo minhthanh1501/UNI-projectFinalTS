@@ -1,42 +1,47 @@
 const MenuModel = require("../models/MenuModel");
 const asyncHandler = require("express-async-handler");
+const slugify = require("slugify");
+const { MenusRecursive } = require("../utils/helpers");
 
 const createMenu = asyncHandler(async (req, res) => {
-  const { code, name, icon, url, parent_id } = req.body;
+  const { name, icon, url, parent_id } = req.body;
+  const code = slugify(name);
 
-  if (!name || !code || !url) {
+  if (!name || !url) {
     throw new Error("Missing Input");
   }
 
-  const response = await MenuModel.create(req.body);
+  const data = { code, name, icon, url, parent_id: parent_id || null };
+
+  const response = await MenuModel.create(data);
 
   return res.status(200).json({
     success: response ? true : false,
     message: response ? "Create Menu success!" : "Something went wrong",
-    MenuData: response,
+    menuData: response,
   });
 });
 
-const getGroups = asyncHandler(async (req, res) => {
-  const { name } = req.query;
-
-  const searchCriteria = {};
-
-  if (name) {
-    searchCriteria.name = new RegExp(name, "i");
-  }
-
-  let query = GroupModel.find(searchCriteria);
-
-  const response = await query;
+const getMenus = asyncHandler(async (req, res) => {
+  const result = await MenusRecursive(null, MenuModel);
 
   return res.status(200).json({
-    success: response ? true : false,
-    message: response ? "Get Groups success!" : "Something went wrong",
-    groupData: response,
+    success: result ? true : false,
+    message: result ? "Get Menus success!" : "Something went wrong",
+    menuData: result,
   });
 });
 
-module.export = {
+const addMenuToGroup = asyncHandler(async (req, res) => {
+  return res.status(200).json({
+    success: result ? true : false,
+    message: result ? "Get Menus success!" : "Something went wrong",
+    menuData: result,
+  });
+});
+
+module.exports = {
   createMenu,
+  getMenus,
+  addMenuToGroup,
 };
