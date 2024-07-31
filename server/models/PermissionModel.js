@@ -12,11 +12,6 @@ var permissionSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  parent_id: {
-    type: mongoose.Types.ObjectId,
-    ref: "Permission",
-    default: null,
-  },
 });
 
 //Export the model

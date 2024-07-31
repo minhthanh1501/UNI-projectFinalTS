@@ -1,6 +1,7 @@
 import FormSearch from "./components/FormSearch"
-import ListGroup from "./components/ListGroup"
-import ListMenu from "./components/ListMenu"
+import ListDirectionMenu from "./components/ListDirectionMenu"
+import ListMenuPermission from "./components/ListMenuPermission"
+import NavHeadList from "./components/ListMenuPermission/NavHeadList"
 import NavHead from "./components/NavHead"
 
 
@@ -9,23 +10,23 @@ const MainPermission = () => {
         <div>
             <div className="border-b">
                 <div className="px-7 py-3">
-                    HEAD
+                    <NavHead />
                 </div>
             </div>
             <div className="flex">
                 <div className="p-2 w-[30%]">
-                    <ListMenu />
+                    <ListDirectionMenu />
                 </div>
                 <div className="p-2 w-[70%]">
-                    {/* <div className="px-7 py-3 border-b">
-                <NavHead />
-            </div> */}
-                    <div >
+                    <div className="pb-5">
+                        <NavHeadList />
+                    </div>
+                    <div className="pb-5">
                         <FormSearch />
                     </div>
-                    {/* <div className="px-7 py-3">
-                <ListGroup />
-            </div> */}
+                    <div className="">
+                        <ListMenuPermission />
+                    </div>
                 </div>
             </div>
         </div>

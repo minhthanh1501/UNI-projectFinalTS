@@ -27,12 +27,13 @@ const FormLogin = () => {
       if (result.data.success) {
         const { accessToken, userData } = result.data;
 
-        const jsonStringify = JSON.stringify(userData);
+        const jsonStringifUserData = JSON.stringify(userData);
         setAccessTokenToLocalStorage(accessToken);
-        setUserInfoToLocalStorage(jsonStringify);
+        setUserInfoToLocalStorage(jsonStringifUserData);
 
         setIsAuthenticated(Boolean(accessToken));
         setUserInfo(userData);
+
         toast.success(
           <div style={{ textAlign: "center" }}>
             <p>Đăng nhập thành công.</p>

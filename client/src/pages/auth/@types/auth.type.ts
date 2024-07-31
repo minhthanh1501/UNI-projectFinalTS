@@ -1,4 +1,4 @@
-import { User } from "../../User/@types/user.type";
+import { User } from "@/pages/System/User/@types/user.type";
 
 export interface AccountLogin {
   username: string;

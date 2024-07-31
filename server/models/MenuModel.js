@@ -24,6 +24,7 @@ var menuSchema = new mongoose.Schema({
     ref: "Menu",
     default: null,
   },
+  // children: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
   permission_ids: [{ type: mongoose.Types.ObjectId, ref: "Permission" }],
 });
 

@@ -16,7 +16,8 @@ import MainPermission from "@/pages/System/Permission/MainPermission";
 import UserLayout from "@/pages/System/User/layouts";
 import GroupLayout from "@/pages/System/Group/Layouts";
 import PermissionLayout from "@/pages/System/Permission/layouts";
-import UserGroup from "@/pages/System/Group/UserGroup";
+import EconomyLayout from "@/pages/Economy/layouts/EconomyLayout";
+import MainIndustryAndTrade from "@/pages/Economy/IndustryAndTrade/MainIndustryAndTrade";
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -82,6 +83,20 @@ export default function useRouteElement() {
             }
           ]
         },
+        {
+          path: path.KINH_TE,
+          element: (
+            <HomeLayout>
+              <EconomyLayout />
+            </HomeLayout>
+          ),
+          children: [
+            {
+              path: path.LINH_VUC_CONG_THUONG,
+              element: <MainIndustryAndTrade />
+            }
+          ]
+        }
       ],
     },
     {

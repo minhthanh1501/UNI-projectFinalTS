@@ -126,6 +126,42 @@ const checkMenuForGroup = asyncHandler(async (req, res) => {
   });
 });
 
+const addMenuToGroup = asyncHandler(async (req, res) => {
+  const { menu_ids, gid } = req.body;
+
+  const response = await GroupModel.findByIdAndUpdate(
+    { _id: gid },
+    { $addToSet: { menu_ids: { $each: menu_ids } } },
+    { new: true }
+  );
+
+  return res.status(200).json({
+    success: response ? true : false,
+    message: response
+      ? "Add Menu To Group Successfully!"
+      : "Something Went Wrong",
+    groupData: response,
+  });
+});
+
+const deleteMenuFromGroup = asyncHandler(async (req, res) => {
+  const { menu_ids, gid } = req.body;
+
+  const response = await GroupModel.findByIdAndUpdate(
+    { _id: gid },
+    { $pullAll: { menu_ids: menu_ids } },
+    { new: true }
+  );
+
+  return res.status(200).json({
+    success: response ? true : false,
+    message: response
+      ? "Add Menu To Group Successfully!"
+      : "Something Went Wrong",
+    groupData: response,
+  });
+});
+
 module.exports = {
   createGroup,
   updateGroupById,
@@ -133,4 +169,6 @@ module.exports = {
   getGroups,
   getGroupById,
   checkMenuForGroup,
+  addMenuToGroup,
+  deleteMenuFromGroup,
 };

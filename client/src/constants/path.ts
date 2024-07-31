@@ -10,6 +10,8 @@ const path = {
   NHOM_NGUOI_DUNG: "nhomnguoidung",
   THANH_VIEN: "thanhvien",
   QUYEN: "quyen",
+  KINH_TE: "kinhte",
+  LINH_VUC_CONG_THUONG: "linhvuccongthuong",
 };
 
 export default path;

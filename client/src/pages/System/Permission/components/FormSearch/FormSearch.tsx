@@ -58,14 +58,13 @@ const FormSearch = () => {
                 >
                     <Form.Item
                         layout="vertical"
-                        label="Name"
                         name="name"
                         style={{
                             width: "98%",
 
                         }}
                     >
-                        <Input style={{ backgroundColor: "transparent" }} placeholder="Name" />
+                        <Input style={{ backgroundColor: "transparent" }} placeholder="Nhập từ khóa tìm kiếm(tên, biểu thức...)" />
                     </Form.Item>
                     <div className="py-3 flex justify-end w-full">
                         <Form.Item >

@@ -60,7 +60,7 @@ export const apiCheckMenuForGroup = (gid: string | undefined | null) => {
 
 // --------MENU---------
 export const apiGetMenus = () => {
-  return axios.get<ApiMenuResponse<Menus>>("/menu");
+  return axios.get<ApiMenuResponse<Menus>>("/menu/getmenus");
 };
 
 export const apiGetMenuById = (_id: string) => {

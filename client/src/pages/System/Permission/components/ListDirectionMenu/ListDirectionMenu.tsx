@@ -1,5 +1,5 @@
 import { ConfigProvider, Tree } from 'antd';
-import type { GetProps, TreeProps } from 'antd';
+import type { GetProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiGetMenus } from '@/pages/System/Group/apis';
@@ -11,6 +11,7 @@ interface TreeDataNode {
     title: string;
     key: string;
     _id: string;
+    parent_id: string;
     children?: TreeDataNode[];
 }
 
@@ -18,11 +19,9 @@ type DirectoryTreeProps = GetProps<typeof Tree.DirectoryTree>;
 
 const { DirectoryTree } = Tree;
 
-const ListMenu = () => {
+const ListDirectionMenu = () => {
     const [menus, setMenus] = useState<Menus>()
     const [menusTreeData, setMenusTreeData] = useState<TreeDataNode[]>()
-    const [expandedKeys, setExpandedKeys] = useState<string[]>(['Phan-quyen', 'He-thong', 'Kinh-te'])
-    const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -46,7 +45,7 @@ const ListMenu = () => {
 
     const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
         console.log('Trigger Select', keys, info);
-        navigate(`${location.pathname}?key=${keys}`)
+        navigate(`${location.pathname}?mid=${info.node._id}&key=${keys}`)
     };
 
     const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
@@ -74,8 +73,6 @@ const ListMenu = () => {
                 showIcon={false}
                 showLine={false}
                 multiple
-                // expandedKeys={expandedKeys}
-                // autoExpandParent={true}
                 onSelect={onSelect}
                 onExpand={onExpand}
                 treeData={menusTreeData}
@@ -84,4 +81,4 @@ const ListMenu = () => {
     );
 }
 
-export default ListMenu
+export default ListDirectionMenu

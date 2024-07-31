@@ -1,4 +1,5 @@
 export interface Menu {
+  _id: string;
   code: string;
   name: string;
   icon: string;

@@ -2,7 +2,7 @@
 
 const NavHead = () => {
     return (
-        <div className="text-white">NavHead</div>
+        <div>NavHead</div>
     )
 }
 

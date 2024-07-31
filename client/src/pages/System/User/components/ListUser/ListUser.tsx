@@ -6,7 +6,7 @@ import ModalCreateUser from "../Modal/ModalCreateUser";
 import { DeleteFilled, EditFilled, MoreOutlined } from "@ant-design/icons";
 import ModalDeleteUser from "../Modal/ModalDeleteUser";
 import { useSearchParams } from "react-router-dom";
-import { User, Users } from "../../@types/user.type";
+import { Users } from "../../@types/user.type";
 
 
 interface DataType {
@@ -31,6 +31,7 @@ const ListUser: React.FC = () => {
     const [isModalOpenDelete, setIsModalOpenDelete] = useState<boolean>(false);
     const [userId, setUserId] = useState<string | number>()
     const [searchParams, setSearchParams] = useSearchParams()
+    const [pageSize, setPageSize] = useState<number>()
 
     const showModal = (id: string | number) => {
         setIsModalOpen(true);
@@ -161,6 +162,17 @@ const ListUser: React.FC = () => {
             <Table
                 columns={columns}
                 dataSource={dataWithKey}
+                pagination={{
+                    onChange(page, pageSize) {
+                        setPageSize(pageSize)
+                    },
+                    position: ["bottomRight"],
+                    pageSize: pageSize,
+                    total: dataWithKey.length, // Tổng số item trong dữ liệu
+                    showSizeChanger: true, // Hiển thị bộ chọn số lượng item mỗi trang
+                    showQuickJumper: true, // Hiển thị bộ chọn trang nhanh
+                    showTotal: (total, range) => `Hiển thị: ${range[0]}-${range[1]}/${total} kết quả`
+                }}
                 rowSelection={{}}
                 onChange={onChange}
                 bordered

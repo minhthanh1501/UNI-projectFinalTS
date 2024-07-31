@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 
 const createPermission = asyncHandler(async (req, res) => {
-  const { name, parent_id } = req.body;
+  const { name } = req.body;
   const code = slugify(name);
 
   if (!name) {

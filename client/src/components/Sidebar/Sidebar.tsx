@@ -6,6 +6,8 @@ import {
 import type { MenuProps } from 'antd';
 import { Layout, Menu, } from 'antd';
 import { useLocation, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { apiGetMenus } from "@/pages/System/Group/apis";
 
 const { Sider } = Layout;
 
@@ -36,6 +38,11 @@ const Sidebar = () => {
   const pathname = location.pathname;
   const pathSegments = pathname.split('/').filter(segment => segment);
   const lastSegment = pathSegments[pathSegments.length - 1];
+
+  // const SideBarMenuQuery = useQuery({
+  //   queryKey: ['sidebar'],
+  //   queryFn: () => apiGetMenus
+  // })
 
   const defaultSelectK = (() => {
     switch (lastSegment) {

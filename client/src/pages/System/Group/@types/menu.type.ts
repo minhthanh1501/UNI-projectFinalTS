@@ -14,7 +14,7 @@ export interface Menu {
   parent_id: string;
   permission_ids: string[];
   order: number;
-  children: TreeDataNode[];
+  children: Menu[];
 }
 
 export type Menus = Menu[];

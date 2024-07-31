@@ -5,6 +5,7 @@ interface TreeDataNode {
   title: string;
   key: string;
   _id: string;
+  parent_id: string;
   children?: TreeDataNode[];
 }
 
@@ -13,6 +14,7 @@ export const transformMenuToTreeData = (menus: Menus): TreeDataNode[] => {
     title: menu.name,
     key: menu.code,
     _id: menu._id,
+    parent_id: menu.parent_id,
     children: menu.children ? menu.children.map(transform) : [],
   });
 
