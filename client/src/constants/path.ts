@@ -3,6 +3,7 @@ const path = {
   REGISTER: "register",
   LOGOUT: "logout",
   USER: "user",
+  PROFILE: "profile",
   HOME: "",
   ALL: "*",
   DANH_MUC: "danhmuc",

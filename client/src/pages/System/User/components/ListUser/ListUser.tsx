@@ -176,6 +176,7 @@ const ListUser: React.FC = () => {
                 rowSelection={{}}
                 onChange={onChange}
                 bordered
+
             />
             {
                 userId ? (<ModalCreateUser open={isModalOpen} onOk={handleOk} onCancel={handleCancel} uid={userId} />) : null

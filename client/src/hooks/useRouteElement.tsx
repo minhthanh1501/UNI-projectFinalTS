@@ -18,6 +18,8 @@ import GroupLayout from "@/pages/System/Group/Layouts";
 import PermissionLayout from "@/pages/System/Permission/layouts";
 import EconomyLayout from "@/pages/Economy/layouts/EconomyLayout";
 import MainIndustryAndTrade from "@/pages/Economy/IndustryAndTrade/MainIndustryAndTrade";
+import ProfileLayouts from "@/pages/Profile/layouts";
+import MainProfile from "@/pages/Profile/MainProfile";
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -25,7 +27,7 @@ function ProtectedRoute() {
 }
 
 function RejectedRoute() {
-  const isAuthenticated = useContext(AppContext);
+  const { isAuthenticated } = useContext(AppContext);
   return !isAuthenticated ? <Outlet /> : <Navigate to={"/"} />; //đã dăng nhập thì đá ra màn hình chính, chưa đăng nhập thì tiếp tục render route con
 }
 
@@ -42,6 +44,20 @@ export default function useRouteElement() {
               <MainContent />
             </HomeLayout>
           ),
+        },
+        {
+          path: path.USER,
+          element: (
+            <HomeLayout>
+              <ProfileLayouts />
+            </HomeLayout>
+          ),
+          children: [
+            {
+              path: path.PROFILE,
+              element: <MainProfile />
+            }
+          ]
         },
         {
           path: path.DANH_MUC,

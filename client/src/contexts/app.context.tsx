@@ -22,8 +22,10 @@ interface AppContextInterface {
   clearData: () => void;
 }
 
+
+
 export const getInitContext: () => AppContextInterface = () => ({
-  isAuthenticated: Boolean(getAccessTokenFromLocalStorage),
+  isAuthenticated: Boolean(getAccessTokenFromLocalStorage()),
   setIsAuthenticated: () => null,
   userInfo: getUserInfoFromLocalStorage(),
   setUserInfo: () => null,

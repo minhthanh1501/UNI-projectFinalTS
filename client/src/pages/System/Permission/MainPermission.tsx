@@ -1,15 +1,35 @@
+import { useQueryParams } from "@/hooks/useQueryParams"
 import FormSearch from "./components/FormSearch"
 import ListDirectionMenu from "./components/ListDirectionMenu"
 import ListMenuPermission from "./components/ListMenuPermission"
-import NavHeadList from "./components/ListMenuPermission/NavHeadList"
 import NavHead from "./components/NavHead"
+import AddMenu from "./components/AddMenu"
 
 
 const MainPermission = () => {
+    const { code } = useQueryParams()
+
+    const renderPage = () => {
+        if (code) {
+            return <AddMenu />
+        }
+
+        return (
+            <>
+                <div className="pb-5">
+                    <FormSearch />
+                </div>
+                <div>
+                    <ListMenuPermission />
+                </div>
+            </>
+        )
+    }
+
     return (
         <div>
             <div className="border-b">
-                <div className="px-7 py-3">
+                <div className="px-6 py-3">
                     <NavHead />
                 </div>
             </div>
@@ -18,14 +38,8 @@ const MainPermission = () => {
                     <ListDirectionMenu />
                 </div>
                 <div className="p-2 w-[70%]">
-                    <div className="pb-5">
-                        <NavHeadList />
-                    </div>
-                    <div className="pb-5">
-                        <FormSearch />
-                    </div>
                     <div className="">
-                        <ListMenuPermission />
+                        {renderPage()}
                     </div>
                 </div>
             </div>

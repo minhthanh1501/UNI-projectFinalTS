@@ -6,11 +6,12 @@ interface QueryParams {
     uid: string | null;
     mid: string | null;
     code: string | null
+    menu_parent_id: string | null
 }
 
 export const useQueryParams = () => {
     const { search } = useLocation();
-    const [queryParams, setQueryParams] = useState<QueryParams>({ gid: null, uid: null, code: null, mid: null });
+    const [queryParams, setQueryParams] = useState<QueryParams>({ gid: null, uid: null, code: null, mid: null, menu_parent_id: null });
 
     useEffect(() => {
         const params = new URLSearchParams(search);
@@ -18,12 +19,14 @@ export const useQueryParams = () => {
         const uid = params.get("uid");
         const mid = params.get("mid");
         const code = params.get("code");
+        const menu_parent_id = params.get("menu_parent_id");
 
         setQueryParams({
             gid: gid || null,
             uid: uid || null,
             mid: mid || null,
             code: code || null,
+            menu_parent_id: menu_parent_id || null
         });
     }, [search]);
 

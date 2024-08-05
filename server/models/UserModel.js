@@ -46,6 +46,11 @@ var userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
+    role: {
+      type: String,
+      default: "user",
+      enum: ["user", "admin"],
+    },
     group_id: {
       type: mongoose.Types.ObjectId,
       ref: "Group",

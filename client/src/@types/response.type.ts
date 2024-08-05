@@ -1,4 +1,3 @@
-import { ApiGroupResponse } from "./response.type";
 export interface ApiResponse {
   status: boolean;
   message: string;
@@ -14,8 +13,4 @@ export interface ApiUserResponse<T> extends ApiResponse {
 
 export interface ApiMenuResponse<T> extends ApiResponse {
   menuData: T;
-}
-
-export interface ApiPermissionResponse<T> extends ApiResponse {
-  permissionData: T;
 }

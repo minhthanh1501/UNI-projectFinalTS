@@ -17,15 +17,25 @@ var menuSchema = new mongoose.Schema({
   },
   url: {
     type: String,
+  },
+  expression: {
+    type: String,
     required: true,
+  },
+  order: {
+    type: Number,
+    required: true,
+  },
+  menuType: {
+    type: String,
+    enum: ["path", "action", "hidden"],
   },
   parent_id: {
     type: mongoose.Types.ObjectId,
     ref: "Menu",
     default: null,
   },
-  // children: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
-  permission_ids: [{ type: mongoose.Types.ObjectId, ref: "Permission" }],
+  children: [{ type: mongoose.Schema.Types.ObjectId, ref: "Menu" }],
 });
 
 //Export the model

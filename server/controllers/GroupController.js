@@ -127,11 +127,14 @@ const checkMenuForGroup = asyncHandler(async (req, res) => {
 });
 
 const addMenuToGroup = asyncHandler(async (req, res) => {
-  const { menu_ids, gid } = req.body;
+  const { code, gid } = req.body;
+
+  const menu = await MenuModel.find({ code }).select("_id");
+  console.log(menu);
 
   const response = await GroupModel.findByIdAndUpdate(
     { _id: gid },
-    { $addToSet: { menu_ids: { $each: menu_ids } } },
+    { $set: { menu_ids: menu } },
     { new: true }
   );
 

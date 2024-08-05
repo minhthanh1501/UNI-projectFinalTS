@@ -72,7 +72,6 @@ const MembersGroup = () => {
             title: 'STT',
             dataIndex: 'key',
             rowScope: 'row',
-
         },
         {
             title: 'Họ tên',

@@ -1,15 +1,16 @@
 import ButtonCustom from '@/components/commons/ButtonCustom';
 import { CloseOutlined, SaveFilled } from '@ant-design/icons';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ConfigProvider } from 'antd';
 import { Tree } from 'antd';
 import type { TreeProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { apiCheckMenuForGroup, apiGetMenus } from '../../apis';
+import { apiAddMenuToGroup, apiCheckMenuForGroup, apiGetMenus } from '../../apis';
 import { Menus } from '../../@types/menu.type';
 import { transformMenuToTreeData } from '@/utils/helpers';
 import { useQueryParams } from '@/hooks/useQueryParams';
+import toast from 'react-hot-toast';
 
 interface TreeDataNode {
     title: string;
@@ -24,27 +25,24 @@ const ListMenu = () => {
     const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
     const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
 
-    const [codeMenu, setCodeMenu] = useState<string[]>()
+    const [codeMenu, setCodeMenu] = useState<string[]>([])
 
-    const [menus, setMenus] = useState<Menus>()
+    const [menus, setMenus] = useState<Menus>([])
     const [menusTreeData, setMenusTreeData] = useState<TreeDataNode[]>();
 
     const navigate = useNavigate()
     const { gid } = useQueryParams()
 
     const CheckMenuForGroupQuery = useQuery({
-        queryKey: ["menus"],
-        queryFn: () => apiCheckMenuForGroup(gid),
-        enabled: Boolean(gid)
+        queryKey: ["menus-for-group"],
+        queryFn: () => apiCheckMenuForGroup(gid || ""),
+        enabled: Boolean(gid),
     })
 
     useEffect(() => {
         if (CheckMenuForGroupQuery.data) {
             setCodeMenu(CheckMenuForGroupQuery.data.data.groupData)
-            if (codeMenu) {
-                setCheckedKeys(codeMenu)
-                console.log(codeMenu);
-            }
+            setCheckedKeys(CheckMenuForGroupQuery.data.data.groupData || [])
         }
     }, [CheckMenuForGroupQuery.data])
 
@@ -56,6 +54,7 @@ const ListMenu = () => {
     useEffect(() => {
         if (GetListMenuQuery.data) {
             setMenus(GetListMenuQuery.data.data.menuData)
+
         }
     }, [GetListMenuQuery.data])
 
@@ -64,8 +63,11 @@ const ListMenu = () => {
             const transformedTreeData = transformMenuToTreeData(menus);
             setMenusTreeData(transformedTreeData);
             setExpandedKeys(['He-thong', 'Kinh-te'])
+            if (codeMenu) {
+                // setCheckedKeys(['He-thong'])
+                setCheckedKeys(codeMenu)
+            }
         }
-
     }, [menus]);
 
     const onExpand: TreeProps['onExpand'] = (expandedKeysValue) => {
@@ -79,12 +81,30 @@ const ListMenu = () => {
     const onCheck: TreeProps['onCheck'] = (checkedKeysValue) => {
         console.log('onCheck', checkedKeysValue);
         setCheckedKeys(checkedKeysValue as React.Key[]);
+
     };
 
     const onSelect: TreeProps['onSelect'] = (selectedKeysValue, info) => {
         console.log('onSelect', info);
         setSelectedKeys(selectedKeysValue);
     };
+
+    const AddMenuToGroupMutation = useMutation({
+        mutationFn: (value: { code: React.Key[], gid: string | null }) => apiAddMenuToGroup(value)
+    })
+
+    const handleSubmit = () => {
+        AddMenuToGroupMutation.mutate({ code: checkedKeys, gid }, {
+            onSuccess: () => {
+                toast.success("Cập nhật thành công")
+            },
+            onError: () => {
+                toast.success("Cập nhật thất bại")
+            }
+        })
+    }
+
+    console.log(checkedKeys);
 
     return (
         <>
@@ -115,6 +135,7 @@ const ListMenu = () => {
                     onSelect={onSelect}
                     selectedKeys={selectedKeys}
                     treeData={menusTreeData}
+                    showLine
                 />
             </ConfigProvider>
             <div className='flex justify-center gap-3'>
@@ -122,7 +143,7 @@ const ListMenu = () => {
                     icon={<SaveFilled />}
                     nameButton={"Cập nhật"}
                     style={{}}
-                    // onClick={}
+                    onClick={handleSubmit}
                     htmlType='submit'
                 />
                 <ButtonCustom

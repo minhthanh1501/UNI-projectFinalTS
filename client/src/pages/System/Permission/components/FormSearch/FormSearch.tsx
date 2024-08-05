@@ -3,6 +3,7 @@ import { ClockCircleOutlined, SearchOutlined } from "@ant-design/icons"
 import { useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import ButtonCustom from "@/components/commons/ButtonCustom";
+import { useQueryParams } from "@/hooks/useQueryParams";
 
 
 
@@ -10,6 +11,7 @@ const FormSearch = () => {
     const [form] = Form.useForm();
     const [searchParams, setSearchParams] = useSearchParams()
     const queryClient = useQueryClient()
+    const { menu_parent_id } = useQueryParams()
 
     if (searchParams.get("name")) {
         form.setFieldValue("name", searchParams.get("name"))
@@ -25,13 +27,13 @@ const FormSearch = () => {
                 searchParams.delete(key);
             }
             setSearchParams(searchParams);
-            console.log("hehe");
+
         });
     }
     const handleSubmit = () => {
         let name = form.getFieldValue("name");
         setParams({ name });
-        queryClient.invalidateQueries({ queryKey: ["groups", name] })
+        queryClient.invalidateQueries({ queryKey: ["menus", menu_parent_id, name] })
     }
 
     return (

@@ -6,7 +6,7 @@ interface ButtonCustomProps {
     nameButton: any,
     disable?: boolean
     type?: "primary" | "default" | "dashed" | "text" | "link",
-    onClick?: React.MouseEventHandler
+    onClick?: () => void,
     htmlType?: "button" | "submit" | "reset"
 }
 

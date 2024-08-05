@@ -37,18 +37,14 @@ const FormLogin = () => {
         toast.success(
           <div style={{ textAlign: "center" }}>
             <p>Đăng nhập thành công.</p>
-            <p>Đang chuyển hướng!</p>
           </div>
         );
-        setTimeout(() => {
-          navigate("/");
-        }, 1500);
       } else {
         toast.error("sai mật khẩu hoặc tài khoản");
       }
     },
     onError: (error: any) => {
-      toast.error("lỗi line 43", error);
+      toast.error("lỗi", error);
     },
   },);
 

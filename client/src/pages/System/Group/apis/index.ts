@@ -50,7 +50,7 @@ export const apiDeleteUserFromGroup = (data: { gid: string; uid?: string }) => {
   return axios.post<ApiUserResponse<User>>("/user/deleteuserfromgroup", data);
 };
 
-export const apiCheckMenuForGroup = (gid: string | undefined | null) => {
+export const apiCheckMenuForGroup = (gid: string) => {
   return axios.get<ApiGroupResponse<string[]>>("/group/menugroup", {
     params: {
       gid,
@@ -63,18 +63,9 @@ export const apiGetMenus = () => {
   return axios.get<ApiMenuResponse<Menus>>("/menu/getmenus");
 };
 
-export const apiGetMenuById = (_id: string) => {
-  return axios.get<ApiMenuResponse<Menu>>("/menu", {
-    params: {
-      _id,
-    },
-  });
-};
-
-export const apiCreateMenu = (data: DataCreateMenu) => {
-  return axios.post<ApiMenuResponse<Menu>>("/menu", data);
-};
-
-export const apiUpdateMenuById = (data: DataUpdateMenu) => {
-  return axios.put<ApiMenuResponse<Menu>>("/menu", data);
+export const apiAddMenuToGroup = (data: {
+  code: React.Key[];
+  gid: string | null;
+}) => {
+  return axios.post<ApiMenuResponse<Group>>("/group/addmenugroup", data);
 };

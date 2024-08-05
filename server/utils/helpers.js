@@ -1,6 +1,45 @@
+// const MenusRecursive = async (parent_id = null, model) => {
+//   try {
+//     const result = await model.find({ parent_id: parent_id });
+
+//     if (result.length === 0) {
+//       return [];
+//     }
+
+//     const menus = await Promise.all(
+//       result.map(async (menu) => {
+//         const children = await MenusRecursive(menu._id.toString(), model);
+//         return {
+//           ...menu.toObject(),
+//           children: children,
+//         };
+//       })
+//     );
+
+//     return menus;
+//   } catch (error) {
+//     console.log(error);
+//     throw error; // re-throw the error after logging it
+//   }
+// };
+
+// Hàm đệ quy để lấy tất cả các mã của menu và menu con
+function getAllMenuCodes(menu) {
+  let codes = [menu.code];
+  if (menu.children) {
+    menu.children.forEach((child) => {
+      codes = codes.concat(getAllMenuCodes(child));
+    });
+  }
+  return codes;
+}
+
 const MenusRecursive = async (parent_id = null, model) => {
   try {
-    const result = await model.find({ parent_id: parent_id });
+    // Tìm các menu có parent_id là null hoặc parent_id được cung cấp
+    const result = await model
+      .find({ parent_id: parent_id })
+      .populate("children");
 
     if (result.length === 0) {
       return [];
@@ -8,6 +47,7 @@ const MenusRecursive = async (parent_id = null, model) => {
 
     const menus = await Promise.all(
       result.map(async (menu) => {
+        // Đệ quy để lấy danh sách children của menu hiện tại
         const children = await MenusRecursive(menu._id.toString(), model);
         return {
           ...menu.toObject(),
@@ -22,17 +62,6 @@ const MenusRecursive = async (parent_id = null, model) => {
     throw error; // re-throw the error after logging it
   }
 };
-
-// Hàm đệ quy để lấy tất cả các mã của menu và menu con
-function getAllMenuCodes(menu) {
-  let codes = [menu.code];
-  if (menu.children) {
-    menu.children.forEach((child) => {
-      codes = codes.concat(getAllMenuCodes(child));
-    });
-  }
-  return codes;
-}
 
 module.exports = {
   MenusRecursive,

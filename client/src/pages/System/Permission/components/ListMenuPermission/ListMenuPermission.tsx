@@ -6,6 +6,9 @@ import { useEffect, useState } from "react";
 import { apiGetMenusNotRecursive } from "../../apis";
 import { Menus } from "../../@types/permission.type";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import ModalDeletePermission from "../Modal/ModalDeletePermission";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getQueryParams } from "@/utils/helpers";
 
 interface DataType {
     key: React.Key,
@@ -21,14 +24,19 @@ const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter,
 };
 
 const ListMenuPermission = () => {
+    const [open, setOpen] = useState<boolean>(false)
+    const [selectedId, setSelectedId] = useState<string>()
     const [data, setData] = useState<Menus>([])
     const dataWithKey: DataType[] = [];
 
-    const { mid } = useQueryParams()
+    const { menu_parent_id } = useQueryParams()
+    let { name } = getQueryParams()
+    const navigate = useNavigate()
+    const location = useLocation()
 
     const GetMenusNotRecursiveQuery = useQuery({
-        queryKey: ["menus", mid],
-        queryFn: () => apiGetMenusNotRecursive(mid)
+        queryKey: ["menus-children", menu_parent_id, name],
+        queryFn: () => apiGetMenusNotRecursive(menu_parent_id, name)
     })
 
     useEffect(() => {
@@ -49,6 +57,19 @@ const ListMenuPermission = () => {
                 order: data[i].order,
             })
         }
+    }
+
+    const showModal = (_id: string) => {
+        setSelectedId(_id)
+        setOpen(true)
+    }
+
+    const onOk = () => {
+        setOpen(false)
+    }
+
+    const onCancel = () => {
+        setOpen(false)
     }
 
     const columns: TableColumnsType<DataType> = [
@@ -83,8 +104,8 @@ const ListMenuPermission = () => {
             render: (_, record) => (
                 <Space>
                     <Button icon={<FullscreenOutlined rotate={45} />}></Button>
-                    <Button icon={<EditOutlined />}></Button>
-                    <Button icon={<DeleteOutlined />}></Button>
+                    <Button icon={<EditOutlined />} onClick={() => navigate(`${location.pathname}${location.search}&mid=${record._id}&code=capnhat`)}></Button>
+                    <Button icon={<DeleteOutlined />} onClick={() => showModal(record._id)}></Button>
                 </Space>
             )
         },
@@ -132,6 +153,7 @@ const ListMenuPermission = () => {
                 onChange={onChange}
                 bordered
             />
+            {selectedId && <ModalDeletePermission open={open} onOk={onOk} onCancel={onCancel} mid={selectedId} />}
         </ConfigProvider>
     )
 }

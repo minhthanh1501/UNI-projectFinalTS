@@ -3,7 +3,7 @@ import type { GetProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiGetMenus } from '@/pages/System/Group/apis';
-import { transformMenuToTreeData } from '@/utils/helpers';
+import { transformMenuToDirectionTreeData } from '@/utils/helpers';
 import { Menus } from '@/pages/System/Group/@types/menu.type';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -26,7 +26,7 @@ const ListDirectionMenu = () => {
     const location = useLocation()
 
     const GetListMenuQuery = useQuery({
-        queryKey: ["menus"],
+        queryKey: ["menus-direction"],
         queryFn: () => apiGetMenus()
     })
 
@@ -38,14 +38,14 @@ const ListDirectionMenu = () => {
 
     useEffect(() => {
         if (menus) {
-            const transformedTreeData = transformMenuToTreeData(menus);
+            const transformedTreeData = transformMenuToDirectionTreeData(menus);
             setMenusTreeData(transformedTreeData);
         }
     }, [menus]);
 
     const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
         console.log('Trigger Select', keys, info);
-        navigate(`${location.pathname}?mid=${info.node._id}&key=${keys}`)
+        navigate(`${location.pathname}?menu_parent_id=${info.node._id}`)
     };
 
     const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
@@ -70,8 +70,7 @@ const ListDirectionMenu = () => {
             }}
         >
             <DirectoryTree
-                showIcon={false}
-                showLine={false}
+                defaultExpandAll={true}
                 multiple
                 onSelect={onSelect}
                 onExpand={onExpand}
