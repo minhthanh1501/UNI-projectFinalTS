@@ -4,7 +4,7 @@ const slugify = require("slugify");
 const { MenusRecursive } = require("../utils/helpers");
 
 const createMenu = asyncHandler(async (req, res) => {
-  const { name, expression, order, parent_id = null, ...dataCreate } = req.body;
+  const { name, expression, order, parent_id, ...dataCreate } = req.body;
   const code = slugify(name);
   const orderInteger = parseInt(order);
 
@@ -16,23 +16,20 @@ const createMenu = asyncHandler(async (req, res) => {
     code,
     name,
     expression,
-    order: orderInteger,
     parent_id,
+    order: orderInteger,
     ...dataCreate,
   };
 
-  const response = await MenuModel.create(data);
-  console.log(response);
-
-  if (parent_id && response) {
-    const menuChildren = await MenuModel.find({ parent_id }).select("_id");
-
-    const addChildrenToParentMenu = await MenuModel.findByIdAndUpdate(
-      { _id: parent_id },
-      { $addToSet: { children: { $each: menuChildren } } },
-      { new: true }
+  if (parent_id == "null") {
+    const menuParent = await MenuModel.findOne({ parent_id: null }).select(
+      "_id"
     );
+
+    data.parent_id = menuParent._id;
   }
+
+  const response = await MenuModel.create(data);
 
   return res.status(200).json({
     success: response ? true : false,
@@ -53,6 +50,7 @@ const getMenus = asyncHandler(async (req, res) => {
 
 const getMenusChildren = asyncHandler(async (req, res) => {
   const { mid, name } = req.query;
+  // console.log(mid, name);
 
   let searchCriteria = {};
   if (name) {
@@ -60,7 +58,8 @@ const getMenusChildren = asyncHandler(async (req, res) => {
   }
 
   if (!mid) {
-    const parent_id = await MenuModel.findOne({ order: 1 });
+    const parent_id = await MenuModel.findOne({ order: 1 }).select("_id");
+    // console.log("parent_id:", parent_id);
 
     const result = await MenuModel.find({
       parent_id: parent_id,
@@ -76,6 +75,7 @@ const getMenusChildren = asyncHandler(async (req, res) => {
 
   const menus = await MenuModel.find({ parent_id: mid, ...searchCriteria });
 
+  // console.log("menus:", menus);
   return res.status(200).json({
     success: menus ? true : false,
     message: menus ? "Get Menus Children success!" : "Something went wrong",

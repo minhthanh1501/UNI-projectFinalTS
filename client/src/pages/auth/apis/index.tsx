@@ -10,3 +10,7 @@ export const apiLoginUser = (data: AccountLogin) => {
 export const apiRegisterUser = (body: AccountRegister) => {
     return axios.post<ResponseRegister>("/user/register", body)
 }
+
+export const apiGetCurrentUser = () => {
+    return axios.get<ResponseLogin>("/user/current")
+}

@@ -6,6 +6,15 @@ import { apiGetMenus } from '@/pages/System/Group/apis';
 import { transformMenuToDirectionTreeData } from '@/utils/helpers';
 import { Menus } from '@/pages/System/Group/@types/menu.type';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { BasicDataNode, DataNode, EventDataNode } from 'antd/es/tree';
+
+interface CustomDataNode extends DataNode {
+    _id: string;
+}
+
+function isCustomDataNode(node: EventDataNode<BasicDataNode | DataNode>): node is EventDataNode<CustomDataNode> {
+    return '_id' in node;
+}
 
 interface TreeDataNode {
     title: string;
@@ -45,7 +54,11 @@ const ListDirectionMenu = () => {
 
     const onSelect: DirectoryTreeProps['onSelect'] = (keys, info) => {
         console.log('Trigger Select', keys, info);
-        navigate(`${location.pathname}?menu_parent_id=${info.node._id}`)
+        if (isCustomDataNode(info.node)) {
+            navigate(`${location.pathname}?menu_parent_id=${info.node._id}`);
+        } else {
+            console.error('Selected node does not have an _id property');
+        }
     };
 
     const onExpand: DirectoryTreeProps['onExpand'] = (keys, info) => {
@@ -70,7 +83,7 @@ const ListDirectionMenu = () => {
             }}
         >
             <DirectoryTree
-                defaultExpandAll={true}
+                defaultExpandAll
                 multiple
                 onSelect={onSelect}
                 onExpand={onExpand}

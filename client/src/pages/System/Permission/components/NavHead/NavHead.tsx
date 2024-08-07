@@ -9,19 +9,26 @@ import { useLocation, useNavigate } from "react-router-dom"
 const NavHead = () => {
     const navigate = useNavigate()
     const location = useLocation()
-    const { code } = useQueryParams()
+    const { menu_parent_id, code } = useQueryParams()
 
     const [addMode, setAddMode] = useState<boolean>(false)
 
     useEffect(() => {
         if (code) {
             setAddMode(true)
+        } else {
+            setAddMode(false)
         }
     }, [code])
 
     const handleOnClickAddMenu = () => {
         setAddMode(true)
-        navigate(`${location.pathname}${location.search}&code=themmoi`)
+        if (menu_parent_id) {
+            navigate(`${location.pathname}${location.search}&code=themmoi`)
+        } else {
+            navigate(`${location.pathname}?menu_parent_id=null&code=themmoi`)
+        }
+
     }
 
     const handleOnClickBack = () => {

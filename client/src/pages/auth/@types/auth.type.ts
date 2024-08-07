@@ -1,5 +1,4 @@
-import { User } from "@/pages/System/User/@types/user.type";
-
+import { UserInfo } from "@/@types/user.type";
 export interface AccountLogin {
   username: string;
   password: string;
@@ -18,7 +17,7 @@ export interface ResponseLogin {
   success: boolean;
   message: string;
   accessToken: string;
-  userData: User;
+  userData: UserInfo;
 }
 
 export type ResponseRegister = Omit<ResponseLogin, "accessToken">;

@@ -1,11 +1,12 @@
 import { RedoOutlined, SaveOutlined } from "@ant-design/icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, ConfigProvider, Form, Input, Select, Space } from "antd"
 import { useEffect, useState } from "react";
 import { apiCreateMenu, apiGetMenuById, apiUpdateMenuById } from "../../apis";
 import toast from "react-hot-toast";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { Menu } from "../../@types/permission.type";
+import { getQueryParams } from "@/utils/helpers";
 
 
 interface ValueFormType {
@@ -32,6 +33,8 @@ const AddMenu = () => {
     const [menuData, setMenuData] = useState<Menu>()
 
     const { menu_parent_id, mid } = useQueryParams()
+    const { name } = getQueryParams()
+    const queryClient = useQueryClient()
 
     useEffect(() => {
         if (mid) {
@@ -90,12 +93,16 @@ const AddMenu = () => {
         if (addMode) {
             addMenuMutation.mutate(value, {
                 onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ['menus-direction'] })
+                    queryClient.invalidateQueries({ queryKey: ['menus-children', menu_parent_id, name] })
                     toast.success("Tạo mới thành công")
                 }
             })
         } else {
             updateMenuMutation.mutate(value, {
                 onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ['menus-direction'] })
+                    queryClient.invalidateQueries({ queryKey: ['menus-children', menu_parent_id, name] })
                     toast.success("cập nhật thành công")
                 }
             })

@@ -5,6 +5,8 @@ const {
   generateRefreshToken,
 } = require("../middlewares/jwt");
 const UserModel = require("../models/UserModel");
+const { model } = require("mongoose");
+const { buildMenuTree } = require("../utils/helpers");
 
 const getUsers = asyncHandler(async (req, res) => {
   const { email, fullname, gid } = req.query;
@@ -177,7 +179,13 @@ const login = asyncHandler(async (req, res) => {
     throw new Error("Missing Input");
   }
 
-  const user = await userModel.findOne({ username });
+  const user = await userModel.findOne({ username }).populate({
+    path: "group_id",
+    populate: {
+      path: "menu_ids",
+    },
+  });
+  console.log(user);
 
   if (user && (await user.isCorrectPassword(password))) {
     const { password, role, refreshToken, ...userData } = user.toObject();
@@ -212,11 +220,28 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 
   const user = await userModel
     .findById(_id)
-    .select("-password -role -refreshToken");
+    .select("-password -role -refreshToken")
+    .populate({
+      path: "group_id",
+      select: "code name",
+      populate: {
+        path: "menu_ids",
+      },
+    });
+
+  const userObject = user.toObject();
+
+  const listMenu = userObject.group_id.menu_ids;
+  const filteredMenu = listMenu.filter((menu) => menu.menuType == "path");
+  const menuTree = buildMenuTree(filteredMenu);
+
+  userObject.listMenu = menuTree;
+  console.log("user", userObject);
 
   return res.status(200).json({
-    success: user ? true : false,
-    rs: user ? user : "User not found",
+    success: userObject ? true : false,
+    message: userObject ? "Get User Current success!" : "Something Went Wrong",
+    userData: userObject,
   });
 });
 

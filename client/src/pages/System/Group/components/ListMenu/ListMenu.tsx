@@ -105,6 +105,7 @@ const ListMenu = () => {
     }
 
     console.log(checkedKeys);
+    console.log("menusTreeData:", menusTreeData);
 
     return (
         <>

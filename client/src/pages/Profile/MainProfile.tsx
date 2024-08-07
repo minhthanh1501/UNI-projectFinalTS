@@ -22,9 +22,9 @@ const MainProfile = () => {
     ];
 
     return (
-        <div className="h-screen">
-            <div>
-                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+        <div className="bg-secondary p-6">
+            <div className="bg-primary">
+                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
             </div>
         </div>
     )

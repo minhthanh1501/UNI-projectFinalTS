@@ -7,10 +7,7 @@ const { Header } = Layout;
 const Head = () => {
 
   const handleLogout = () => {
-    localStorage.removeItem("userInfo")
     localStorage.removeItem("accessToken")
-    localStorage.removeItem("groupOfUser")
-    localStorage.removeItem("MenuOfUser")
 
     window.location.reload()
   }
@@ -18,7 +15,7 @@ const Head = () => {
 
   const items: MenuProps['items'] = [
     {
-      label: <Link to={"/"}>Thông tin cá nhân</Link>,
+      label: <Link to={"/user-information.html"}>Thông tin cá nhân</Link>,
       key: '0',
     },
     {

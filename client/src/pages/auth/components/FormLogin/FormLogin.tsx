@@ -17,7 +17,7 @@ import { apiLoginUser } from "../../apis/index"
 const FormLogin = () => {
   const { FaArrowRightToBracket } = icons;
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUserInfo } = useContext(AppContext);
+  const { setIsAuthenticated, setUserInfo, } = useContext(AppContext);
 
   const loginUserMutation = useMutation({
     mutationFn: (value: AccountLogin) => {
@@ -25,15 +25,9 @@ const FormLogin = () => {
     },
     onSuccess: (result) => {
       if (result.data.success) {
-        const { accessToken, userData } = result.data;
-
-        const jsonStringifUserData = JSON.stringify(userData);
+        const { accessToken } = result.data;
         setAccessTokenToLocalStorage(accessToken);
-        setUserInfoToLocalStorage(jsonStringifUserData);
-
         setIsAuthenticated(Boolean(accessToken));
-        setUserInfo(userData);
-
         toast.success(
           <div style={{ textAlign: "center" }}>
             <p>Đăng nhập thành công.</p>

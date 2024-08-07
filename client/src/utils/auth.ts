@@ -1,3 +1,9 @@
+import { UserInfo } from "@/@types/user.type";
+import { AppContext } from "@/contexts/app.context";
+import { apiGetCurrentUser } from "@/pages/auth/apis";
+import { useQuery } from "@tanstack/react-query";
+import { useContext, useEffect } from "react";
+
 export const setAccessTokenToLocalStorage = (accessToken: string | "") => {
   localStorage.setItem("accessToken", accessToken);
 };
@@ -21,7 +27,7 @@ export const setRefreshTokenToLocalStorage = (refreshToken: string) => {
 export const getAccessTokenFromLocalStorage = () =>
   localStorage.getItem("accessToken");
 
-export const getUserInfoFromLocalStorage = () => {
+export const getUserInfoFromLocalStorage = (): UserInfo | null => {
   const userInfo = localStorage.getItem("userInfo");
 
   if (userInfo) return JSON.parse(userInfo);
@@ -51,4 +57,22 @@ export const getRefreshTokenToLocalStorage = () =>
 export const clearLocalStorage = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
+};
+
+export const getCurrentUser = () => {
+  const { setUserInfo, userInfo } = useContext(AppContext);
+  const accessToken = getAccessTokenFromLocalStorage();
+
+  const getCurrentUseQuery = useQuery({
+    queryKey: ["userInfo"],
+    queryFn: () => apiGetCurrentUser(),
+    enabled: Boolean(accessToken),
+  });
+
+  useEffect(() => {
+    if (getCurrentUseQuery.data) {
+      setUserInfo(getCurrentUseQuery.data.data.userData);
+      console.log(userInfo);
+    }
+  }, [getCurrentUseQuery.data]);
 };

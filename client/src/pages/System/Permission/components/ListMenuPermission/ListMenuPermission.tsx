@@ -36,7 +36,8 @@ const ListMenuPermission = () => {
 
     const GetMenusNotRecursiveQuery = useQuery({
         queryKey: ["menus-children", menu_parent_id, name],
-        queryFn: () => apiGetMenusNotRecursive(menu_parent_id, name)
+        queryFn: () => apiGetMenusNotRecursive(menu_parent_id, name),
+        enabled: Boolean(menu_parent_id)
     })
 
     useEffect(() => {

@@ -30,4 +30,4 @@ export default {
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
 ###############
-Group->components->ListUser => checkbox chưa được checked
+Sidebar => lấy được dữ liệu nhưng chưa làm được sidebar

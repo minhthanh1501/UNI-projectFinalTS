@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   CaretRightOutlined,
   PieChartOutlined,
@@ -6,12 +6,11 @@ import {
 import type { MenuProps } from 'antd';
 import { Layout, Menu, } from 'antd';
 import { useLocation, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { apiGetMenus } from "@/pages/System/Group/apis";
+import { AppContext } from "@/contexts/app.context";
 
 const { Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
+export type MenuItem = Required<MenuProps>['items'][number];
 
 function getItem(
   label: React.ReactNode,
@@ -22,7 +21,7 @@ function getItem(
 ): MenuItem {
   return {
     key,
-    icon,
+    icon: icon || <CaretRightOutlined />,
     children,
     label,
     onClick,
@@ -32,17 +31,80 @@ function getItem(
 
 const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [sidebarItems, setSidebarItems] = useState<MenuItem[]>([])
+
   const navigate = useNavigate()
+  const { userInfo } = useContext(AppContext)
+
+  useEffect(() => {
+    if (userInfo !== null) {
+      const menus = userInfo.listMenu
+
+      // const newSidebarItems = menus.map(menu => {
+      //   const children = menu.children?.map(child => {
+      //     return getItem(child.name, child.code, undefined, undefined, () => navigate(`${child.url}`));
+      //   });
+      //   // console.log(children);
+      //   return getItem(menu.name, menu.code, undefined, children);
+      // });
+      // setSidebarItems(newSidebarItems)
+
+      const sidebarItemsRecursive = (menus: any[], navigate: Function): any[] => {
+        const arr = [];
+
+        for (let i = 0; i < menus.length; i++) {
+          const menu = menus[i];
+          // Nếu menu có children, gọi đệ quy cho children
+          const children = menu.children && menu.children.length > 0
+            ? sidebarItemsRecursive(menu.children, navigate)
+            : [];
+
+          // Tạo item cho menu hiện tại
+          arr.push(getItem(
+            menu.name,
+            menu.code,
+            menu.icon,
+            children,
+            menu.children.length === 0 ? () => navigate(menu.url) : undefined
+          ));
+        }
+
+        return arr;
+      };
+
+      let array = sidebarItemsRecursive(menus, navigate);
+      setSidebarItems(array)
+      console.log("array:", array)
+
+      // const sidebarItemsMenu = (menus: any, parent_id: any): any => {
+      //   const arr = [];
+
+      //   for (let i = 0; i < menus.length; i++) {
+      //     if (menus[i].parrent_id == parent_id) {
+      //       let menuItem = menus[i]
+
+      //       arr.push({
+      //         title: menuItem.name,
+      //         key: menuItem.code,
+      //         icon: menuItem.icon,
+      //         children: sidebarItemsMenu(menus, menuItem._id)
+      //       })
+
+      //     }
+      //   }
+      //   return arr
+      // }
+      // let array = sidebarItemsMenu(menus, null);
+      // console.log(array)
+    }
+  }, [userInfo])
+
+  console.log(userInfo);
 
   const location = useLocation()
   const pathname = location.pathname;
   const pathSegments = pathname.split('/').filter(segment => segment);
   const lastSegment = pathSegments[pathSegments.length - 1];
-
-  // const SideBarMenuQuery = useQuery({
-  //   queryKey: ['sidebar'],
-  //   queryFn: () => apiGetMenus
-  // })
 
   const defaultSelectK = (() => {
     switch (lastSegment) {
@@ -89,7 +151,7 @@ const Sidebar = () => {
         style={{
           backgroundColor: "#141414",
         }}
-        items={items}
+        items={sidebarItems}
 
       >
       </Menu>

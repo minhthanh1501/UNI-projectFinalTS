@@ -110,10 +110,12 @@ const checkMenuForGroup = asyncHandler(async (req, res) => {
     response.menu_ids.forEach((menu_id) => {
       menus.forEach((menu) => {
         if (menu._id.toString() === menu_id.toString()) {
-          console.log("menu_ids:", menu_id);
-          console.log("ID:", menu._id);
+          // console.log("menu_ids:", menu_id);
+          // console.log("ID:", menu._id);
           const menuCodes = getAllMenuCodes(menu);
+          // console.log(menuCodes);
           matchedMenuCodes = [...new Set([...matchedMenuCodes, ...menuCodes])];
+          console.log("matchedMenuCodes:", matchedMenuCodes);
         }
       });
     });
