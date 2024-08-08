@@ -1,14 +1,18 @@
 import ButtonCustom from "@/components/commons/ButtonCustom"
+import { AppContext } from "@/contexts/app.context"
 import { useQueryParams } from "@/hooks/useQueryParams"
 import { ClockCircleOutlined, CloseCircleOutlined, FolderOpenTwoTone, LeftOutlined, PlusSquareOutlined } from "@ant-design/icons"
 import { Button, ConfigProvider, Breadcrumb } from "antd"
-import { useEffect, useState } from "react"
+import { ItemType } from "antd/es/breadcrumb/Breadcrumb"
+import { useContext, useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 
 const NavHead = () => {
     const navigate = useNavigate()
     const location = useLocation()
+    const { breadcrumbItem } = useContext(AppContext)
+
     const { menu_parent_id, code } = useQueryParams()
 
     const [addMode, setAddMode] = useState<boolean>(false)
@@ -36,6 +40,13 @@ const NavHead = () => {
         navigate(-1)
     }
 
+    const items: ItemType[] = [
+        {
+            type: 'separator',
+            separator: <FolderOpenTwoTone twoToneColor={['#f1a905', '#f1a905']} />,
+        },
+    ]
+
     return (
         <ConfigProvider
             theme={{
@@ -58,22 +69,7 @@ const NavHead = () => {
                 <div>
                     <Breadcrumb
                         separator=">"
-                        items={[
-                            {
-                                type: 'separator',
-                                separator: <FolderOpenTwoTone twoToneColor={['#f1a905', '#f1a905']} />,
-
-                            },
-                            {
-                                title: 'Home',
-                            },
-                            {
-                                title: 'Application Center',
-                            },
-                            {
-                                title: 'Application List',
-                            },
-                        ]}
+                        items={items}
                     />
                 </div>
                 {addMode ? (

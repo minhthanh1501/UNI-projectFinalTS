@@ -1,14 +1,12 @@
 
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import ButtonCustom from '@/components/commons/ButtonCustom'
+import { useContext } from 'react'
+import { AppContext } from '@/contexts/app.context'
 const SystemLayout = () => {
     const navigate = useNavigate()
-    const location = useLocation()
-    const pathname = location.pathname;
-    const pathSegments = pathname.split('/').filter(segment => segment);
-    const lastSegment = pathSegments[pathSegments.length - 1];
-
+    const { currentLocation } = useContext(AppContext)
 
     return (
         <div className='bg-secondary p-6 min-h-[100vh]'>
@@ -24,7 +22,7 @@ const SystemLayout = () => {
                     nameButton={""}
                     onClick={() => navigate(-1)}
                 />
-                <h1 className='text-white font-bold text-xl'>{lastSegment}</h1>
+                <h1 className='text-white font-bold text-xl'>{currentLocation}</h1>
             </div>
             <div className='bg-primary'>
                 <Outlet />

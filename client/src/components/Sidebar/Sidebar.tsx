@@ -34,72 +34,46 @@ const Sidebar = () => {
   const [sidebarItems, setSidebarItems] = useState<MenuItem[]>([])
 
   const navigate = useNavigate()
-  const { userInfo } = useContext(AppContext)
+  const { userInfo, setCurrentLocation } = useContext(AppContext)
 
   useEffect(() => {
     if (userInfo !== null) {
       const menus = userInfo.listMenu
 
-      // const newSidebarItems = menus.map(menu => {
-      //   const children = menu.children?.map(child => {
-      //     return getItem(child.name, child.code, undefined, undefined, () => navigate(`${child.url}`));
-      //   });
-      //   // console.log(children);
-      //   return getItem(menu.name, menu.code, undefined, children);
-      // });
-      // setSidebarItems(newSidebarItems)
-
-      const sidebarItemsRecursive = (menus: any[], navigate: Function): any[] => {
-        const arr = [];
-
-        for (let i = 0; i < menus.length; i++) {
-          const menu = menus[i];
-          // Nếu menu có children, gọi đệ quy cho children
-          const children = menu.children && menu.children.length > 0
-            ? sidebarItemsRecursive(menu.children, navigate)
-            : [];
-
-          // Tạo item cho menu hiện tại
-          arr.push(getItem(
-            menu.name,
-            menu.code,
-            menu.icon,
-            children,
-            menu.children.length === 0 ? () => navigate(menu.url) : undefined
-          ));
-        }
-
-        return arr;
-      };
-
       let array = sidebarItemsRecursive(menus, navigate);
       setSidebarItems(array)
       console.log("array:", array)
-
-      // const sidebarItemsMenu = (menus: any, parent_id: any): any => {
-      //   const arr = [];
-
-      //   for (let i = 0; i < menus.length; i++) {
-      //     if (menus[i].parrent_id == parent_id) {
-      //       let menuItem = menus[i]
-
-      //       arr.push({
-      //         title: menuItem.name,
-      //         key: menuItem.code,
-      //         icon: menuItem.icon,
-      //         children: sidebarItemsMenu(menus, menuItem._id)
-      //       })
-
-      //     }
-      //   }
-      //   return arr
-      // }
-      // let array = sidebarItemsMenu(menus, null);
-      // console.log(array)
     }
   }, [userInfo])
 
   console.log(userInfo);
+
+
+  const sidebarItemsRecursive = (menus: any[], navigate: Function): any[] => {
+    const arr = [];
+
+    for (let i = 0; i < menus.length; i++) {
+      const menu = menus[i];
+      // Nếu menu có children, gọi đệ quy cho children
+      const children = menu.children && menu.children.length > 0
+        ? sidebarItemsRecursive(menu.children, navigate)
+        : undefined;
+
+      // Tạo item cho menu hiện tại
+      arr.push(getItem(
+        menu.name,
+        menu.code,
+        menu.icon,
+        children,
+        menu.children.length === 0 ? () => {
+          setCurrentLocation([menu.name])
+          navigate(menu.url)
+        } : undefined
+      ));
+    }
+
+    return arr;
+  };
 
   const location = useLocation()
   const pathname = location.pathname;
@@ -119,14 +93,14 @@ const Sidebar = () => {
     }
   })();
 
-  const items: MenuItem[] = [
-    getItem('Hệ thống', '1', <PieChartOutlined />, [
-      getItem('Người dùng', '2', <CaretRightOutlined />, undefined, () => navigate("/danhmuc/nguoidung")),
-      getItem('Nhóm người dùng', '3', <CaretRightOutlined />, undefined, () => navigate("/danhmuc/nhomnguoidung")),
-      getItem('Quyền', '4', <CaretRightOutlined />, undefined, () => navigate("/danhmuc/quyen")),
-    ]),
+  // const items: MenuItem[] = [
+  //   getItem('Hệ thống', '1', <PieChartOutlined />, [
+  //     getItem('Người dùng', '2', <CaretRightOutlined />, undefined, () => navigate("/danhmuc/nguoidung")),
+  //     getItem('Nhóm người dùng', '3', <CaretRightOutlined />, undefined, () => navigate("/danhmuc/nhomnguoidung")),
+  //     getItem('Quyền', '4', <CaretRightOutlined />, undefined, () => navigate("/danhmuc/quyen")),
+  //   ]),
 
-  ];
+  // ];
 
   return (
     <Sider

@@ -1,8 +1,7 @@
-import React, { ReactNode, useContext } from "react";
+import React, { ReactNode } from "react";
 import Head from "../../components/Head";
 import Sidebar from "../../components/Sidebar";
 import { Layout } from "antd";
-import { AppContext } from "@/contexts/app.context";
 const { Content } = Layout;
 
 type HomeLayoutProps = {
@@ -10,9 +9,6 @@ type HomeLayoutProps = {
 }
 
 const HomeLayout: React.FC<HomeLayoutProps> = ({ children }) => {
-  const { userInfo } = useContext(AppContext)
-  console.log(userInfo);
-
 
   return (
     <div>

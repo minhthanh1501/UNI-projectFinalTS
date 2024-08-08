@@ -230,13 +230,18 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     });
 
   const userObject = user.toObject();
+  if (userObject.group_id != null) {
+    const listMenu = userObject.group_id.menu_ids;
+    const filteredMenu = listMenu.filter((menu) => menu.menuType == "path");
+    console.log("filteredMenu", filteredMenu);
+    const menuTree = buildMenuTree(filteredMenu);
+    console.log("menuTree:", menuTree);
+    userObject.listMenu = menuTree;
+  } else {
+    userObject.listMenu = ["a"];
+  }
 
-  const listMenu = userObject.group_id.menu_ids;
-  const filteredMenu = listMenu.filter((menu) => menu.menuType == "path");
-  const menuTree = buildMenuTree(filteredMenu);
-
-  userObject.listMenu = menuTree;
-  console.log("user", userObject);
+  console.log("userObject: ", userObject);
 
   return res.status(200).json({
     success: userObject ? true : false,

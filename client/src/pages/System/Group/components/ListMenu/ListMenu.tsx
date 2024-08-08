@@ -5,7 +5,7 @@ import { ConfigProvider } from 'antd';
 import { Tree } from 'antd';
 import type { TreeProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { apiAddMenuToGroup, apiCheckMenuForGroup, apiGetMenus } from '../../apis';
 import { Menus } from '../../@types/menu.type';
 import { transformMenuToTreeData } from '@/utils/helpers';
@@ -31,6 +31,7 @@ const ListMenu = () => {
     const [menusTreeData, setMenusTreeData] = useState<TreeDataNode[]>();
 
     const navigate = useNavigate()
+    const location = useLocation()
     const { gid } = useQueryParams()
 
     const CheckMenuForGroupQuery = useQuery({
@@ -79,9 +80,9 @@ const ListMenu = () => {
     };
 
     const onCheck: TreeProps['onCheck'] = (checkedKeysValue) => {
-        console.log('onCheck', checkedKeysValue);
-        setCheckedKeys(checkedKeysValue as React.Key[]);
-
+        const checkedKeys = 'checked' in checkedKeysValue ? checkedKeysValue.checked : checkedKeysValue;
+        console.log('onCheck', checkedKeys);
+        setCheckedKeys(checkedKeys as React.Key[]);
     };
 
     const onSelect: TreeProps['onSelect'] = (selectedKeysValue, info) => {
@@ -97,6 +98,9 @@ const ListMenu = () => {
         AddMenuToGroupMutation.mutate({ code: checkedKeys, gid }, {
             onSuccess: () => {
                 toast.success("Cập nhật thành công")
+                setTimeout(() => {
+                    navigate(`${location.pathname}`)
+                }, 1500)
             },
             onError: () => {
                 toast.success("Cập nhật thất bại")
@@ -127,6 +131,7 @@ const ListMenu = () => {
                 }}
             >
                 <Tree
+                    checkStrictly={true}
                     checkable
                     onExpand={onExpand}
                     expandedKeys={expandedKeys}

@@ -1,13 +1,8 @@
 import { createContext, useEffect, useState } from "react";
 import {
   getAccessTokenFromLocalStorage,
-  getCurrentUser,
-  getGroupOfUserFromLocalStorage,
-  getMenuOfUserFromLocalStorage,
   getUserInfoFromLocalStorage,
 } from "../utils/auth";
-import { Group } from "@/pages/System/Group/@types/group.type";
-import { Menu } from "@/pages/System/Group/@types/menu.type";
 import { UserInfo } from "@/@types/user.type";
 import { apiGetCurrentUser } from "@/pages/auth/apis";
 import { useQuery } from "@tanstack/react-query";
@@ -18,10 +13,12 @@ interface AppContextInterface {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   userInfo: UserInfo | null;
   setUserInfo: React.Dispatch<React.SetStateAction<UserInfo | null>>;
-  groupOfUser: Group | null;
-  setGroupOfUser: React.Dispatch<React.SetStateAction<Group | null>>;
-  menuOfUser: Menu | null;
-  setMenuOfUser: React.Dispatch<React.SetStateAction<Menu | null>>;
+  currentLocation: string[] | null;
+  setCurrentLocation: React.Dispatch<React.SetStateAction<string[] | null>>;
+  darkMode: boolean;
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  breadcrumbItem: string[] | null;
+  setBreadcrumbItem: React.Dispatch<React.SetStateAction<string[] | null>>;
   clearData: () => void;
 }
 
@@ -32,10 +29,12 @@ export const getInitContext: () => AppContextInterface = () => ({
   setIsAuthenticated: () => null,
   userInfo: getUserInfoFromLocalStorage(),
   setUserInfo: () => null,
-  groupOfUser: getGroupOfUserFromLocalStorage(),
-  setGroupOfUser: () => null,
-  menuOfUser: getMenuOfUserFromLocalStorage(),
-  setMenuOfUser: () => null,
+  currentLocation: null,
+  setCurrentLocation: () => null,
+  darkMode: false,
+  setDarkMode: () => null,
+  breadcrumbItem: null,
+  setBreadcrumbItem: () => null,
   clearData: () => null
 });
 
@@ -49,13 +48,15 @@ export default function AppProvider({ children, defaultContext = initialContext 
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(defaultContext.isAuthenticated);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(defaultContext.userInfo);
-  const [groupOfUser, setGroupOfUser] = useState<Group | null>(defaultContext.groupOfUser);
-  const [menuOfUser, setMenuOfUser] = useState<Menu | null>(defaultContext.menuOfUser);
+  const [darkMode, setDarkMode] = useState<boolean>(defaultContext.darkMode);
+  const [currentLocation, setCurrentLocation] = useState<string[] | null>(defaultContext.currentLocation);
+  const [breadcrumbItem, setBreadcrumbItem] = useState<string[] | null>(defaultContext.breadcrumbItem);
   const clearData = () => {
     setIsAuthenticated(false);
     setUserInfo(null);
-    setGroupOfUser(null)
-    setMenuOfUser(null)
+    setDarkMode(false);
+    setCurrentLocation(null)
+    setBreadcrumbItem(null)
     console.log("AppProvider useEffect none is called");
   };
   // reload page => getUserInfo
@@ -81,10 +82,12 @@ export default function AppProvider({ children, defaultContext = initialContext 
         setIsAuthenticated,
         userInfo,
         setUserInfo,
-        groupOfUser,
-        setGroupOfUser,
-        menuOfUser,
-        setMenuOfUser,
+        currentLocation,
+        setCurrentLocation,
+        darkMode,
+        setDarkMode,
+        breadcrumbItem,
+        setBreadcrumbItem,
         clearData,
       }}
     >

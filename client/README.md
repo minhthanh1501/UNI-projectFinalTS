@@ -30,4 +30,7 @@ export default {
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
 ###############
-Sidebar => lấy được dữ liệu nhưng chưa làm được sidebar
+
+1. Fix Router cùng cấp
+2. Fix Breadcum => đẩy title lên context và lấy
+3. Giao diện sáng tối

@@ -1,15 +1,17 @@
 import { ConfigProvider, Tree } from 'antd';
 import type { GetProps } from 'antd';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiGetMenus } from '@/pages/System/Group/apis';
 import { transformMenuToDirectionTreeData } from '@/utils/helpers';
 import { Menus } from '@/pages/System/Group/@types/menu.type';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BasicDataNode, DataNode, EventDataNode } from 'antd/es/tree';
+import { AppContext } from '@/contexts/app.context';
 
 interface CustomDataNode extends DataNode {
     _id: string;
+    name: string;
 }
 
 function isCustomDataNode(node: EventDataNode<BasicDataNode | DataNode>): node is EventDataNode<CustomDataNode> {
@@ -31,8 +33,10 @@ const { DirectoryTree } = Tree;
 const ListDirectionMenu = () => {
     const [menus, setMenus] = useState<Menus>()
     const [menusTreeData, setMenusTreeData] = useState<TreeDataNode[]>()
+
     const navigate = useNavigate()
     const location = useLocation()
+    const { setBreadcrumbItem } = useContext(AppContext)
 
     const GetListMenuQuery = useQuery({
         queryKey: ["menus-direction"],
@@ -88,6 +92,7 @@ const ListDirectionMenu = () => {
                 onSelect={onSelect}
                 onExpand={onExpand}
                 treeData={menusTreeData}
+                expandedKeys={['Phan-quyen']}
             />
         </ConfigProvider>
     );
