@@ -32,6 +32,11 @@ const getUsers = asyncHandler(async (req, res) => {
     message: users ? "Get Users SuccessFully!" : "Something went Wrong!",
     userData: users,
   });
+  // const delay = 3000; // Độ trễ 3 giây
+
+  // setTimeout(() => {
+  //   res.send("This response was delayed by 3 seconds.");
+  // }, delay);
 });
 
 const getUserById = asyncHandler(async (req, res) => {
@@ -185,7 +190,6 @@ const login = asyncHandler(async (req, res) => {
       path: "menu_ids",
     },
   });
-  console.log(user);
 
   if (user && (await user.isCorrectPassword(password))) {
     const { password, role, refreshToken, ...userData } = user.toObject();
@@ -202,6 +206,7 @@ const login = asyncHandler(async (req, res) => {
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "lax",
     });
 
     return res.status(200).json({
@@ -272,6 +277,38 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   });
 });
 
+const changePassword = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { oldpassword, newpassword: password } = req.body;
+
+  if (!oldpassword || !password) {
+    throw new Error("Missing Input");
+  }
+
+  if (oldpassword === password) {
+    throw new Error("Password same");
+  }
+
+  const user = await userModel.findById(_id);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const isMatch = await user.isCorrectPassword(oldpassword);
+  if (!isMatch) {
+    throw new Error("Old password is incorrect");
+  }
+
+  user.password = password;
+  const response = await user.save(); // Mã hóa mật khẩu sẽ được thực hiện ở đây bởi pre-save hook
+
+  return res.status(200).json({
+    status: response ? true : false,
+    message: response ? "ChangePassword success!" : "Something went wrong",
+    userData: response,
+  });
+});
+
 const logout = asyncHandler(async (req, res) => {
   const cookie = req.cookies;
 
@@ -307,4 +344,5 @@ module.exports = {
   updateUserById,
   addUserToGroup,
   deleteUserFromGroup,
+  changePassword,
 };

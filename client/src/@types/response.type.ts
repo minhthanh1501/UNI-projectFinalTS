@@ -1,6 +1,6 @@
 export interface ApiResponse {
   status: boolean;
-  message: string;
+  mes: string;
 }
 
 export interface ApiGroupResponse<T> extends ApiResponse {

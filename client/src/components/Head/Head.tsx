@@ -1,10 +1,14 @@
 import { Button, ConfigProvider, Dropdown, Layout, MenuProps, Space } from "antd";
 import logo from "../..//assets/images/quochuy.png";
 import { UserOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { AppContext } from "@/contexts/app.context";
 const { Header } = Layout;
 
 const Head = () => {
+  const { setCurrentLocation } = useContext(AppContext)
+  const navigate = useNavigate()
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken")
@@ -12,10 +16,16 @@ const Head = () => {
     window.location.reload()
   }
 
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, path: string) => {
+    e.preventDefault()
+    setCurrentLocation(["Thông tin cá nhân"])
+    navigate(path)
+  }
+
 
   const items: MenuProps['items'] = [
     {
-      label: <Link to={"/user-information.html"}>Thông tin cá nhân</Link>,
+      label: <Link to={"/user/profile"} onClick={(e) => handleLinkClick(e, "/user/profile")}>Thông tin cá nhân</Link>,
       key: '0',
     },
     {

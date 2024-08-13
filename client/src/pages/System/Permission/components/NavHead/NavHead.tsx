@@ -47,6 +47,12 @@ const NavHead = () => {
         },
     ]
 
+
+    // breadcrumbItem.unshift({
+    //     type: 'separator',
+    //     separator: <FolderOpenTwoTone twoToneColor={['#f1a905', '#f1a905']} />,
+    // },)
+
     return (
         <ConfigProvider
             theme={{
@@ -69,7 +75,7 @@ const NavHead = () => {
                 <div>
                     <Breadcrumb
                         separator=">"
-                        items={items}
+                        items={breadcrumbItem}
                     />
                 </div>
                 {addMode ? (

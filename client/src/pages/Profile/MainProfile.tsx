@@ -1,4 +1,4 @@
-import { Tabs, TabsProps } from "antd";
+import { ConfigProvider, Tabs, TabsProps } from "antd";
 import FormProfile from "./components/FormProfile";
 import FormChangePassword from "./components/FormChangePassword";
 
@@ -11,22 +11,34 @@ const MainProfile = () => {
     const items: TabsProps['items'] = [
         {
             key: '1',
-            label: 'Tab 1',
+            label: 'Thông tin cá nhân',
             children: <FormProfile />,
+
         },
         {
             key: '2',
-            label: 'Tab 2',
+            label: 'Đổi mật khẩu',
             children: <FormChangePassword />,
+
         },
     ];
 
     return (
-        <div className="bg-secondary p-6">
-            <div className="bg-primary">
-                <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        <ConfigProvider
+            theme={{
+                components: {
+                    Tabs: {
+                        itemColor: "white"
+                    }
+                }
+            }}
+        >
+            <div className="bg-secondary p-6">
+                <div className="bg-primary">
+                    <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+                </div>
             </div>
-        </div>
+        </ConfigProvider>
     )
 }
 

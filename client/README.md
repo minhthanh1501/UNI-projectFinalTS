@@ -29,8 +29,9 @@ export default {
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
-###############
+1. darkMode
+2. lĩnh vực công thương => database , nghiệp vụ
 
-1. Fix Router cùng cấp
-2. Fix Breadcum => đẩy title lên context và lấy
-3. Giao diện sáng tối
+- 5 bảng , CRUD
+
+3. BreadcrumItem => menuTreeData chuyển về menu bằng cấp

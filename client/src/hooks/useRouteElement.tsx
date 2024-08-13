@@ -20,6 +20,7 @@ import EconomyLayout from "@/pages/Economy/layouts/EconomyLayout";
 import MainIndustryAndTrade from "@/pages/Economy/IndustryAndTrade/MainIndustryAndTrade";
 import ProfileLayouts from "@/pages/Profile/layouts";
 import MainProfile from "@/pages/Profile/MainProfile";
+import IndustryAndTradeLayout from "@/pages/Economy/IndustryAndTrade/layouts/IndustryAndTradeLayout";
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -109,7 +110,13 @@ export default function useRouteElement() {
           children: [
             {
               path: path.LINH_VUC_CONG_THUONG,
-              element: <MainIndustryAndTrade />
+              element: <IndustryAndTradeLayout />,
+              children: [
+                {
+                  path: path.QLAT_THUCPHAM,
+                  element: <MainIndustryAndTrade />
+                }
+              ]
             }
           ]
         }

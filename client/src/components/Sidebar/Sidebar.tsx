@@ -42,18 +42,18 @@ const Sidebar = () => {
 
       let array = sidebarItemsRecursive(menus, navigate);
       setSidebarItems(array)
-      console.log("array:", array)
     }
   }, [userInfo])
 
-  console.log(userInfo);
-
+  // console.log(userInfo);
 
   const sidebarItemsRecursive = (menus: any[], navigate: Function): any[] => {
     const arr = [];
 
     for (let i = 0; i < menus.length; i++) {
       const menu = menus[i];
+
+      const url = menu.url.startsWith('/') ? menu.url : `/${menu.url}`;
       // Nếu menu có children, gọi đệ quy cho children
       const children = menu.children && menu.children.length > 0
         ? sidebarItemsRecursive(menu.children, navigate)
@@ -67,7 +67,7 @@ const Sidebar = () => {
         children,
         menu.children.length === 0 ? () => {
           setCurrentLocation([menu.name])
-          navigate(menu.url)
+          navigate(url)
         } : undefined
       ));
     }

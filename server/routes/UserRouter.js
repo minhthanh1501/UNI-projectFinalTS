@@ -12,5 +12,6 @@ router.get("/getuser/:_id", ctrls.getUserById);
 router.delete("/getuser/:_id", ctrls.deleteUserById);
 router.post("/addusertogroup", ctrls.addUserToGroup);
 router.post("/deleteuserfromgroup", ctrls.deleteUserFromGroup);
+router.put("/changepassword", verifyAccessToken, ctrls.changePassword);
 
 module.exports = router;

@@ -7,14 +7,14 @@ const initRoutes = require("./routes");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-app.use(cors());
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: process.env.URL_CLIENT,
-//     methods: ["POST", "PUT", "GET", "DELETE"],
-//   })
-// );
+// app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.URL_CLIENT,
+    methods: ["POST", "PUT", "GET", "DELETE"],
+  })
+);
 app.use(cookieParser());
 
 const port = process.env.PORT || 9999;

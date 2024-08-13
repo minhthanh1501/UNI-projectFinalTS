@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   getAccessTokenFromLocalStorage,
   getUserInfoFromLocalStorage,
@@ -6,6 +6,8 @@ import {
 import { UserInfo } from "@/@types/user.type";
 import { apiGetCurrentUser } from "@/pages/auth/apis";
 import { useQuery } from "@tanstack/react-query";
+import { ItemType } from "antd/es/breadcrumb/Breadcrumb"
+import { FolderOpenTwoTone } from "@ant-design/icons";
 
 
 interface AppContextInterface {
@@ -17,8 +19,8 @@ interface AppContextInterface {
   setCurrentLocation: React.Dispatch<React.SetStateAction<string[] | null>>;
   darkMode: boolean;
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
-  breadcrumbItem: string[] | null;
-  setBreadcrumbItem: React.Dispatch<React.SetStateAction<string[] | null>>;
+  breadcrumbItem: ItemType[];
+  setBreadcrumbItem: React.Dispatch<React.SetStateAction<ItemType[]>>;
   clearData: () => void;
 }
 
@@ -33,8 +35,11 @@ export const getInitContext: () => AppContextInterface = () => ({
   setCurrentLocation: () => null,
   darkMode: false,
   setDarkMode: () => null,
-  breadcrumbItem: null,
-  setBreadcrumbItem: () => null,
+  breadcrumbItem: [{
+    type: 'separator',
+    separator: <FolderOpenTwoTone twoToneColor={['#f1a905', '#f1a905']} />,
+  }],
+  setBreadcrumbItem: () => [],
   clearData: () => null
 });
 
@@ -50,13 +55,13 @@ export default function AppProvider({ children, defaultContext = initialContext 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(defaultContext.userInfo);
   const [darkMode, setDarkMode] = useState<boolean>(defaultContext.darkMode);
   const [currentLocation, setCurrentLocation] = useState<string[] | null>(defaultContext.currentLocation);
-  const [breadcrumbItem, setBreadcrumbItem] = useState<string[] | null>(defaultContext.breadcrumbItem);
+  const [breadcrumbItem, setBreadcrumbItem] = useState<ItemType[]>(defaultContext.breadcrumbItem);
   const clearData = () => {
     setIsAuthenticated(false);
     setUserInfo(null);
     setDarkMode(false);
     setCurrentLocation(null)
-    setBreadcrumbItem(null)
+    setBreadcrumbItem([])
     console.log("AppProvider useEffect none is called");
   };
   // reload page => getUserInfo
@@ -71,7 +76,6 @@ export default function AppProvider({ children, defaultContext = initialContext 
   useEffect(() => {
     if (userData) {
       setUserInfo(userData.data.userData);
-      console.log(userInfo);
     }
   }, [userData]);
 
@@ -95,3 +99,5 @@ export default function AppProvider({ children, defaultContext = initialContext 
     </AppContext.Provider>
   );
 }
+
+export const useApp = () => useContext(AppContext);

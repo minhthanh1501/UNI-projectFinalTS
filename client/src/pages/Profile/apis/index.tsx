@@ -4,5 +4,9 @@ import { User } from "@/pages/System/User/@types/user.type"
 
 
 export const apiUpdateUserById = (data: User) => {
-    return axios.post<ApiUserResponse<User>>("/user", data)
+    return axios.put<ApiUserResponse<User>>("user/getuser", data)
+}
+
+export const apiChangePassword = (data: { oldpassword: string, newpassword: string }) => {
+    return axios.put<ApiUserResponse<User>>("user/changepassword", data)
 }
