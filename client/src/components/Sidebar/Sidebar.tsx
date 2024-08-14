@@ -37,11 +37,13 @@ const Sidebar = () => {
   const { userInfo, setCurrentLocation } = useContext(AppContext)
 
   useEffect(() => {
+    console.log(userInfo);
     if (userInfo !== null) {
       const menus = userInfo.listMenu
 
-      let array = sidebarItemsRecursive(menus, navigate);
+      let array = sidebarItemsRecursive(menus, navigate) || null;
       setSidebarItems(array)
+
     }
   }, [userInfo])
 

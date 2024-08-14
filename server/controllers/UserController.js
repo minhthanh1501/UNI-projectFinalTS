@@ -243,7 +243,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     console.log("menuTree:", menuTree);
     userObject.listMenu = menuTree;
   } else {
-    userObject.listMenu = ["a"];
+    userObject.listMenu = [];
   }
 
   console.log("userObject: ", userObject);

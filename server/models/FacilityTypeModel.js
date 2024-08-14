@@ -1,40 +1,29 @@
 const mongoose = require("mongoose"); // Erase if already required
 
 // Declare the Schema of the Mongo model
-var menuSchema = new mongoose.Schema(
+var facilityTypeSchema = new mongoose.Schema(
   {
     code: {
       type: String,
       required: true,
       unique: true,
-      index: true,
     },
     name: {
       type: String,
       required: true,
+      unique: true,
     },
-    icon: {
-      type: String,
-    },
-    url: {
-      type: String,
-    },
-    expression: {
+    type: {
       type: String,
       required: true,
     },
-    order: {
-      type: Number,
-      required: true,
-    },
-    menuType: {
+    field: {
       type: String,
-      enum: ["path", "action", "hidden"],
+      required: true,
+      enum: ["nong-nghiep", "cong-thuong"],
     },
-    parent_id: {
-      type: mongoose.Types.ObjectId,
-      ref: "Menu",
-      default: null,
+    note: {
+      type: String,
     },
   },
   {
@@ -43,4 +32,4 @@ var menuSchema = new mongoose.Schema(
 );
 
 //Export the model
-module.exports = mongoose.model("Menu", menuSchema);
+module.exports = mongoose.model("FacilityType", facilityTypeSchema);
