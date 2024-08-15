@@ -21,6 +21,10 @@ import MainIndustryAndTrade from "@/pages/Economy/IndustryAndTrade/MainIndustryA
 import ProfileLayouts from "@/pages/Profile/layouts";
 import MainProfile from "@/pages/Profile/MainProfile";
 import IndustryAndTradeLayout from "@/pages/Economy/IndustryAndTrade/layouts/IndustryAndTradeLayout";
+import MainProfession from "@/pages/Economy/Category/Profession/MainProfession";
+import MainFacilityType from "@/pages/Economy/Category/FacilityType/MainFacilityType";
+import MainContentTest from "@/pages/Economy/Category/ContentTest/MainContentTest";
+import MainProduct from "@/pages/Economy/Category/Product/MainProduct";
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext);
@@ -117,6 +121,22 @@ export default function useRouteElement() {
                   element: <MainIndustryAndTrade />
                 }
               ]
+            },
+            {
+              path: path.NGANH_NGHE,
+              element: <MainProfession />
+            },
+            {
+              path: path.LOAI_HINH_CO_SO,
+              element: <MainFacilityType />
+            },
+            {
+              path: path.NOI_DUNG_KIEM_TRA,
+              element: <MainContentTest />
+            },
+            {
+              path: path.SAN_PHAM,
+              element: <MainProduct />
             }
           ]
         }

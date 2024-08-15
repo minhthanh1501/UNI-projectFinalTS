@@ -2,9 +2,27 @@ const foodSafetyModel = require("../models/FoodSafetyModel");
 const asyncHandler = require("express-async-handler");
 
 const createOrUpdate = asyncHandler(async (req, res) => {
-  const { _id, name, type } = req.body;
+  const {
+    _id,
+    facility_owner_name,
+    facility_name,
+    district_id,
+    base_address,
+    facility_type_id,
+    profession_id,
+    personal_identity_number,
+  } = req.body;
 
-  if (!name || !type) throw new Error("Missing Input");
+  if (
+    !facility_owner_name ||
+    !facility_name ||
+    !district_id ||
+    !base_address ||
+    !facility_type_id ||
+    !profession_id ||
+    !personal_identity_number
+  )
+    throw new Error("Missing Input");
 
   if (!_id) {
     const response = await foodSafetyModel.create(req.body);
@@ -42,11 +60,29 @@ const search = asyncHandler(async (req, res) => {
 
   const formatedQueries = JSON.parse(queryString);
 
-  queries?.parent_id !== "null"
-    ? (formatedQueries.parent_id = queries.parent_id)
-    : (formatedQueries.parent_id = null);
+  // Danh sách các field mà bạn muốn tìm kiếm với regex
+  const searchFields = [
+    "facility_name",
+    "facility_owner_name",
+    "phone",
+    "personal_identity_number",
+    "business_registration_number",
+  ];
 
-  let queryCommand = foodSafetyModel.find(formatedQueries);
+  searchFields.forEach((field) => {
+    if (queries[field]) {
+      formatedQueries[field] = { $regex: queries[field], $options: "i" };
+    }
+  });
+
+  if (queries.district_id) queryCommand.district_id = queries.district_id;
+  if (queries.profession_id) queryCommand.profession_id = queries.profession_id;
+
+  let queryCommand = foodSafetyModel
+    .find(formatedQueries)
+    .populate("district_id")
+    .populate("profession_id")
+    .populate("facility_type_id");
 
   // xac định các trường cần lấy
   if (req.query.fields) {

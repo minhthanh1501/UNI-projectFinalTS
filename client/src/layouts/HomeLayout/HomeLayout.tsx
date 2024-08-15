@@ -14,9 +14,11 @@ const HomeLayout: React.FC<HomeLayoutProps> = ({ children }) => {
     <div>
       <Layout>
         <Head />
-        <Layout>
+        <Layout hasSider>
           <Sidebar />
-          <Content style={{ marginLeft: 200 }}>{children}</Content>
+          <Layout>
+            <Content style={{ marginLeft: 200 }}>{children}</Content>
+          </Layout>
         </Layout>
       </Layout>
     </div>

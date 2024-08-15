@@ -4,6 +4,7 @@ const menuRouter = require("./MenuRouter");
 const professionRouter = require("./ProfessionRouter");
 const districtRouter = require("./DistrictRouter");
 const facilityTypeRouter = require("./FacilityTypeRouter");
+const foodSafetyRouter = require("./FoodSafetyRouter");
 
 const { errHandler, notFound } = require("../middlewares/errHandler");
 
@@ -14,6 +15,7 @@ const initRoutes = (app) => {
   app.use("/api/profession/", professionRouter);
   app.use("/api/district/", districtRouter);
   app.use("/api/facilityType/", facilityTypeRouter);
+  app.use("/api/foodSafety/", foodSafetyRouter);
 
   app.use(notFound);
   app.use(errHandler);
