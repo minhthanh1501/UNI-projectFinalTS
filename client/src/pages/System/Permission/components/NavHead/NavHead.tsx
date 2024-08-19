@@ -47,12 +47,6 @@ const NavHead = () => {
         },
     ]
 
-
-    // breadcrumbItem.unshift({
-    //     type: 'separator',
-    //     separator: <FolderOpenTwoTone twoToneColor={['#f1a905', '#f1a905']} />,
-    // },)
-
     return (
         <ConfigProvider
             theme={{
@@ -72,14 +66,14 @@ const NavHead = () => {
             }}
         >
             <div className="flex justify-between">
-                <div>
+                <div className="flex w-[30%] justify-start">
                     <Breadcrumb
                         separator=">"
                         items={breadcrumbItem}
                     />
                 </div>
                 {addMode ? (
-                    <div>
+                    <div className="flex w-[70%] justify-end">
                         <Button
                             icon={<LeftOutlined />}
                             onClick={handleOnClickBack}

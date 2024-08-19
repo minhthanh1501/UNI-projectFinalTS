@@ -1,12 +1,18 @@
 import ButtonCustom, { ButtonCustomProps } from "@/components/commons/ButtonCustom/ButtonCustom"
-import CardComponent from "@/components/commons/CardComponent"
+import CommonList from "@/components/commons/CommonList/CommonList"
 import FormComponent from "@/components/commons/FormComponent"
 import { InputComponentProps } from "@/components/commons/FormComponent/FormComponent"
-import { ConfigProvider, Form, Space, Table, TableProps, Tag } from "antd"
-import { Fragment } from "react/jsx-runtime"
+import { DeleteFilled } from "@ant-design/icons"
+import { Form, Space, Table, TableProps, Tag } from "antd"
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import { DataType } from "./@types/profession.type"
+import { useState } from "react"
+import CreateOrUpdateModal from "./components/Modal/CreateOrUpdateModal"
 
 
 const MainProfession = () => {
+    const [openCreateOrUpdateModal, setOpenCreateOrUpdateModal] = useState<boolean>(false)
+
     const [form] = Form.useForm()
     const cardTitle = ''
 
@@ -14,49 +20,56 @@ const MainProfession = () => {
         console.log(value);
     }
 
+    const showModal = () => {
+        setOpenCreateOrUpdateModal(true);
+
+    }
+
+    const handleOk = () => {
+        setOpenCreateOrUpdateModal(false);
+    };
+
+    const handleCancel = () => {
+        setOpenCreateOrUpdateModal(false);
+    };
+
     const dataInput: InputComponentProps[] = [
         {
             label: "name",
             name: "name",
             type: "text",
-            rules: [{ required: true, message: 'Please input your username!' }]
+            rules: [{ required: true, message: 'Please input your username!' }],
         },
         {
             label: "age",
             name: "age",
-            type: "text"
+            type: "text",
+            // formItemProps: { hidden: true },
+            // fieldProps: { disabled: true }
         }
     ]
 
-    const button: ButtonCustomProps[] = [
+    const actions: ButtonCustomProps[] = [
         {
-            nameButton: "Thêm",
+            nameButton: "Tìm kiếm",
             style: {
                 color: "white",
-                backgroundColor: "red"
             },
             htmlType: "submit",
-            type: "default"
+            type: "primary",
+            icon: <FaMagnifyingGlass />
+
         },
         {
-            nameButton: "Thêm",
+            nameButton: "Làm mới",
             style: {
                 color: "white",
-
             },
             htmlType: "reset",
-            type: "default"
+            type: "dashed"
         }
     ]
 
-
-    interface DataType {
-        key: string;
-        name: string;
-        age: number;
-        address: string;
-        tags: string[];
-    }
 
     const columns: TableProps<DataType>['columns'] = [
         {
@@ -130,41 +143,28 @@ const MainProfession = () => {
             tags: ['cool', 'teacher'],
         },
     ];
-
+    {/* CommonList */ }
     return (
-        <ConfigProvider
-            theme={{
-                token: {
-                    colorBgContainer: "transparent",
-                    colorText: "white",
-                    colorBorder: "#222222",
-                    colorBgBase: "#141414",
-                },
-                components: {
-                    Table: {
-                        headerBg: "#1d1d1d",
-                        borderColor: "#333"
-                    },
-                }
-            }}
-        >
-            <CardComponent
-                title={cardTitle || (
-                    <Fragment>
-                        <ButtonCustom nameButton="làm mới" type="default" onClick={() => console.log("1")} />
-                    </Fragment>
-                )}
-                extra={(
-                    <Fragment>
-                        <ButtonCustom nameButton="Lưu" />
-                        <ButtonCustom nameButton="Xóa" />
-                    </Fragment>
-                )}>
-                <FormComponent onFinish={onFinish} data={dataInput} formInstance={form} type="vertical" button={button} />
-                <Table columns={columns} dataSource={data} bordered />
-            </CardComponent>
 
-        </ConfigProvider>
+        < CommonList
+            title={cardTitle || (
+                <div>
+                    <ButtonCustom nameButton="làm mới" type="default" onClick={() => (window.location.reload())} />
+                </div>
+            )
+            }
+            size="default"
+            bordered={false}
+            extra={(
+                <div className="flex gap-2">
+                    <ButtonCustom nameButton="Thêm mới" type="primary" onClick={showModal} />
+                    <ButtonCustom nameButton="Xóa" disable type="primary" icon={<DeleteFilled />} />
+                </div>
+            )}>
+            <FormComponent onFinish={onFinish} inputData={dataInput} formInstance={form} type="vertical" actions={actions} className="mb-6" />
+            <Table columns={columns} dataSource={data} bordered />
+            {openCreateOrUpdateModal ? <CreateOrUpdateModal open={openCreateOrUpdateModal} onCancel={handleCancel} onOk={handleOk} /> : undefined}
+        </ CommonList>
 
 
     )

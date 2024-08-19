@@ -9,6 +9,13 @@ interface TreeDataNode {
   children?: TreeDataNode[];
 }
 
+interface DataNode {
+  title: string;
+  key: string;
+  _id: string;
+  parent_id: string;
+}
+
 export const transformMenuToTreeData = (menus: Menus): TreeDataNode[] => {
   const transform = (menu: Menu): TreeDataNode => ({
     title: menu.name,
@@ -37,6 +44,32 @@ export const transformMenuToDirectionTreeData = (
   };
 
   return menus.map(transform);
+};
+
+export const flattenMenuTree = (menus: Menus): DataNode[] => {
+  const flatten = (menu: Menu): DataNode[] => {
+    // Bắt đầu với node hiện tại
+    const flattened = [
+      {
+        title: menu.name,
+        key: menu.code,
+        _id: menu._id,
+        parent_id: menu.parent_id,
+      },
+    ];
+
+    // Nếu có children, tiếp tục đệ quy và thêm vào danh sách phẳng
+    if (menu.children) {
+      menu.children.forEach((child) => {
+        flattened.push(...flatten(child));
+      });
+    }
+
+    return flattened;
+  };
+
+  // Kết hợp tất cả các menu đã được flatten thành một mảng duy nhất
+  return menus.flatMap(flatten);
 };
 
 export const getQueryParams = () => {

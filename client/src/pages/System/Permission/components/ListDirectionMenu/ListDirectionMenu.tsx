@@ -3,7 +3,7 @@ import type { GetProps } from 'antd';
 import { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { apiGetMenus } from '@/pages/System/Group/apis';
-import { transformMenuToDirectionTreeData } from '@/utils/helpers';
+import { flattenMenuTree, transformMenuToDirectionTreeData } from '@/utils/helpers';
 import { Menus } from '@/pages/System/Group/@types/menu.type';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BasicDataNode, DataNode, EventDataNode } from 'antd/es/tree';
@@ -31,10 +31,11 @@ const { DirectoryTree } = Tree;
 const ListDirectionMenu = () => {
     const [menus, setMenus] = useState<Menus>()
     const [menusTreeData, setMenusTreeData] = useState<TreeDataNode[]>()
+    const [menusData, setMenusData] = useState<[]>()
 
     const navigate = useNavigate()
     const location = useLocation()
-    const { breadcrumbItem, setBreadcrumbItem } = useContext(AppContext)
+    const { setBreadcrumbItem } = useContext(AppContext)
 
 
     const GetListMenuQuery = useQuery({
@@ -55,18 +56,26 @@ const ListDirectionMenu = () => {
         }
     }, [menus]);
 
-    const buildBreadcrumb = (node: CustomDataNode, menuTreeData: TreeDataNode[], breadcrumb: { title: string }[] = []): { title: string }[] => {
+    useEffect(() => {
+        if (menus) {
+            const transformedData = flattenMenuTree(menus);
+            setMenusData(transformedData);
+        }
+    }, [menusTreeData])
+
+
+    const buildBreadcrumb = (node: CustomDataNode, menusData: [], breadcrumb: { title: string }[] = []): { title: string }[] => {
         // Thêm node hiện tại vào breadcrumb
         breadcrumb.unshift({ title: node.title });
 
         // Tìm menu cha dựa trên parent_id của node hiện tại
-        const parentNode = menuTreeData.find(menu => menu._id === node.parent_id);
+        const parentNode = menusData.find(menu => menu._id === node.parent_id);
 
         console.log(menus);
 
         if (parentNode) {
             // Nếu tìm thấy menu cha, tiếp tục đệ quy lên đến gốc
-            return buildBreadcrumb(parentNode as CustomDataNode, menuTreeData, breadcrumb);
+            return buildBreadcrumb(parentNode as CustomDataNode, menusData, breadcrumb);
         }
 
         // Nếu không còn menu cha, trả về breadcrumb đã xây dựng
@@ -77,7 +86,7 @@ const ListDirectionMenu = () => {
         console.log('Trigger Select', keys, info.node);
         if (isCustomDataNode(info.node)) {
             // Gọi hàm đệ quy để xây dựng breadcrumb
-            const newBreadcrumbItems = buildBreadcrumb(info.node as CustomDataNode, menusTreeData || []);
+            const newBreadcrumbItems = buildBreadcrumb(info.node as CustomDataNode, menusData || []);
 
             // Cập nhật breadcrumbItem với toàn bộ đường dẫn từ gốc đến node được chọn
             setBreadcrumbItem(newBreadcrumbItems);

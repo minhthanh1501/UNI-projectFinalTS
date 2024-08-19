@@ -1,11 +1,9 @@
 import { Card } from "antd"
 import { CardSize } from "antd/es/card/Card"
-import { Fragment } from "react/jsx-runtime"
-import ButtonCustom from "../ButtonCustom"
 
-export interface CardComponentProps {
+export interface CommonListProps {
     title?: React.ReactNode
-    size?: CardSize | undefined
+    size?: CardSize
     extra?: React.ReactNode
     className?: string
     loading?: boolean
@@ -13,7 +11,7 @@ export interface CardComponentProps {
     children: React.ReactNode
 }
 
-const CardComponent: React.FC<CardComponentProps> = ({ title, className, loading, size, extra, bordered, children }) => {
+const CommonList: React.FC<CommonListProps> = ({ title, className, loading, size, extra, bordered, children }) => {
     return (
         <Card
             title={title}
@@ -27,4 +25,4 @@ const CardComponent: React.FC<CardComponentProps> = ({ title, className, loading
     )
 }
 
-export default CardComponent
+export default CommonList
