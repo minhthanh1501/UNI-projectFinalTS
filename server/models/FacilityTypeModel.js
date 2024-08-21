@@ -11,11 +11,11 @@ var facilityTypeSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     type: {
       type: String,
       required: true,
+      enum: ["loai-hinh-san-xuat", "loai-hinh-kinh-doanh"],
     },
     field: {
       type: String,

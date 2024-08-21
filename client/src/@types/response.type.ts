@@ -14,3 +14,19 @@ export interface ApiUserResponse<T> extends ApiResponse {
 export interface ApiMenuResponse<T> extends ApiResponse {
   menuData: T;
 }
+
+export interface ApiProfessionResponse<T> extends ApiResponse {
+  professionData: T;
+}
+
+export interface ApiFacilityTypeResponse<T> extends ApiResponse {
+  facilityTypeData: T;
+}
+
+export interface ApiContentTestResponse<T> extends ApiResponse {
+  contentTestData: T;
+}
+
+export interface ApiProductResponse<T> extends ApiResponse {
+  productData: T;
+}

@@ -6,6 +6,14 @@ const createOrUpdate = asyncHandler(async (req, res) => {
 
   if (!name || !type || !code || !field) throw new Error("Missing Input");
 
+  const checkExist = await facilityTypeModel.findOne({ code });
+
+  if (checkExist)
+    return res.status(400).json({
+      status: true,
+      mes: "Mã đã tồn tại",
+    });
+
   if (!_id) {
     const response = await facilityTypeModel.create(req.body);
 

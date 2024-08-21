@@ -8,7 +8,6 @@ import { AppContext } from "@/contexts/app.context";
 import { useContext } from "react";
 import Login from "@/pages/auth/Login";
 import Register from "@/pages/auth/Register";
-
 import SystemLayout from "@/pages/System/layouts/SystemLayout";
 import MainUser from "@/pages/System/User/MainUser";
 import MainGroup from "@/pages/System/Group/MainGroup";
@@ -20,7 +19,6 @@ import EconomyLayout from "@/pages/Economy/layouts/EconomyLayout";
 import MainIndustryAndTrade from "@/pages/Economy/IndustryAndTrade/MainIndustryAndTrade";
 import ProfileLayouts from "@/pages/Profile/layouts";
 import MainProfile from "@/pages/Profile/MainProfile";
-import IndustryAndTradeLayout from "@/pages/Economy/IndustryAndTrade/layouts/IndustryAndTradeLayout";
 import MainProfession from "@/pages/Economy/Category/Profession/MainProfession";
 import MainFacilityType from "@/pages/Economy/Category/FacilityType/MainFacilityType";
 import MainContentTest from "@/pages/Economy/Category/ContentTest/MainContentTest";
@@ -114,13 +112,7 @@ export default function useRouteElement() {
           children: [
             {
               path: path.LINH_VUC_CONG_THUONG,
-              element: <IndustryAndTradeLayout />,
-              children: [
-                {
-                  path: path.QLAT_THUCPHAM,
-                  element: <MainIndustryAndTrade />
-                }
-              ]
+              element: <MainIndustryAndTrade />,
             },
             {
               path: path.NGANH_NGHE,

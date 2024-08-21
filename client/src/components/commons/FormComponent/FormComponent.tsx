@@ -1,32 +1,9 @@
-import { FormInstance, Input, InputProps } from "antd"
-import Form, { FormItemProps, Rule } from "antd/es/form"
-import { FormLayout } from "antd/es/form/Form"
-import { Fragment } from "react/jsx-runtime"
+import { Input, Select } from "antd"
+import Form from "antd/es/form"
 import ButtonCustom, { ButtonCustomProps } from "../ButtonCustom/ButtonCustom"
+import { FormComponentProps, InputComponentProps } from "@/@types/components.type";
 
-interface FormComponentProps {
-    formInstance: FormInstance,
-    onFinish?: (value: any) => void
-    type?: FormLayout,
-    className?: string
-    variant?: "outlined" | "borderless" | "filled" | undefined
-    inputData: InputComponentProps[]
-    actions?: ButtonCustomProps[]
-}
 
-export interface InputComponentProps {
-    type: string,
-    disabled?: boolean,
-    rules?: Rule[],
-    name: string,
-    label: React.ReactNode,
-    placeholder?: string,
-    clasName?: string,
-    formItemProps?: FormItemProps,
-    fieldProps?: InputProps,
-
-    // [key: string]: any;
-}
 
 const FormComponent: React.FC<FormComponentProps> = ({ inputData, formInstance, type, className, variant, actions, onFinish }) => {
     const renderInput = (item: InputComponentProps) => {
@@ -37,9 +14,10 @@ const FormComponent: React.FC<FormComponentProps> = ({ inputData, formInstance, 
                         name={item.name}
                         label={item.label}
                         rules={item.rules}
+                        className={item.className}
                         {...item.formItemProps}
                     >
-                        <Input placeholder={item.placeholder} className={item.clasName} {...item.fieldProps} />
+                        <Input placeholder={item.placeholder} {...item.fieldProps} />
                     </Form.Item>
                 );
             case "password":
@@ -48,10 +26,28 @@ const FormComponent: React.FC<FormComponentProps> = ({ inputData, formInstance, 
                         name={item.name}
                         label={item.label}
                         rules={item.rules}
+                        className={item.className}
+                        {...item.formItemProps}
                     >
-                        <Input.Password placeholder={item.placeholder} className={item.clasName} />
+                        <Input.Password placeholder={item.placeholder} {...item.fieldProps} />
                     </Form.Item>
                 );
+            case "select":
+                return (
+                    <Form.Item
+                        name={item.name}
+                        label={item.label}
+                        rules={item.rules}
+                        {...item.formItemProps}
+                    >
+                        <Select
+                            showSearch
+                            allowClear={true}
+                            placeholder="---Chọn---"
+                            {...item.selectProps}
+                        />
+                    </Form.Item>
+                )
             default:
                 return null;
         }
@@ -79,21 +75,23 @@ const FormComponent: React.FC<FormComponentProps> = ({ inputData, formInstance, 
             className={className}
             variant={variant}
         >
-            {inputData.map((item, index) => (
-                <Fragment key={index}>
-                    {renderInput(item)}
-                </Fragment>
-            ))}
+            <div className="w-full flex flex-wrap gap-2">
+                {inputData.map((item, index) => (
+                    <div key={index}>
+                        {renderInput(item)}
+                    </div>
+                ))}
+            </div>
             <div className="flex items-center justify-end w-full gap-2">
                 {actions && (
                     actions.map((item, index) => (
-                        <div key={index} className="flex gap-2">
+                        <div key={index}>
                             {renderButton(item)}
                         </div>
                     ))
                 )}
             </div>
-        </Form>
+        </Form >
     )
 }
 

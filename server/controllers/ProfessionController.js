@@ -2,9 +2,9 @@ const professionModel = require("../models/ProfessionModel");
 const asyncHandler = require("express-async-handler");
 
 const createOrUpdate = asyncHandler(async (req, res) => {
-  const { _id, code, name, field, parent_id } = req.body;
+  const { _id, code, name } = req.body;
 
-  if (!code || !name || !field) throw new Error("Missing Input");
+  if (!code || !name) throw new Error("Missing Input");
 
   if (!_id) {
     const response = await professionModel.create(req.body);
@@ -77,7 +77,9 @@ const search = asyncHandler(async (req, res) => {
 const getDetailById = asyncHandler(async (req, res) => {
   const { _id } = req.params;
 
-  const response = await professionModel.findById(_id);
+  const response = await professionModel
+    .findById(_id)
+    .populate({ path: "parent_id", select: "_id code name" });
 
   return res.status(200).json({
     status: response ? true : false,

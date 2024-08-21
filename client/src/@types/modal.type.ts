@@ -3,5 +3,4 @@ export interface ModalCreateOrUpdateProps {
   onOk: () => void;
   onCancel: () => void;
   id?: string;
-  children: React.ReactNode;
 }

@@ -11,7 +11,6 @@ var professionSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     field: {
       type: String,
@@ -19,8 +18,8 @@ var professionSchema = new mongoose.Schema(
       enum: ["nong-nghiep", "cong-thuong"],
     },
     parent_id: {
-      type: String,
-      default: null,
+      type: mongoose.Types.ObjectId,
+      ref: "FacilityType",
     },
   },
   {

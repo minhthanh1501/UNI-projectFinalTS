@@ -1,3 +1,3 @@
-import CommondList from "./CommondList";
+import CommondList from "./CommonList";
 
 export default CommondList
